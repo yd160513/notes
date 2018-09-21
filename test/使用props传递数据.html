@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>使用props传递数据</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+</head>
+<body>
+    <div id="app">
+        <first-component message="message"></first-component>
+        <first-component :message="message"></first-component>
+    </div>
+    <script>
+        Vue.component('first-component', {
+            props: ['message'],
+            template: '<div>{{ message.length }}</div>'
+        })
+        var vm = new Vue({
+            el: '#app',
+            data: {
+                message: [1, 2]
+            }
+        });
+    </script>
+</body>
+</html>
