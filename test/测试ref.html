@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>1.x 和 2.x的ref</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+</head>
+<body>
+    <div id="app">
+        <my-component ref="child"></my-component>
+        <p ref="p">这是一个p标签</p>
+        <button @click="handleRef">打印子组件内的message</button>
+        <button @click="handleRef1">打印本组件内的ref</button>
+    </div>
+    <script>
+        Vue.component('my-component', {
+            template: '<div>这是我的子组件</div>',
+            data() {
+                return {
+                    message: '子组件内容'
+                }
+            }
+        })
+        var vm = new Vue({
+            el: '#app',
+            methods: {
+                handleRef() {
+                    console.log(this.$refs.child);
+                },
+                handleRef1() {
+                    console.log(this.$refs.p);
+                }
+            }
+        });
+    </script>
+</body>
+</html>
