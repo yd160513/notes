@@ -9,20 +9,31 @@
 </head>
 <body>
     <div id="app">
-        <div v-for="i in obj">
-            <input type="text" value="" />
+        <div v-for="(i, index) in obj">
+            <input type="text" v-model="obj[index].value1" />
+            <input type="text" v-model="obj[index].value2" />
         </div>
         <button @click="add">+</button>
+        <button @click="con">打印</button>
     </div>
     <script>
         var vm = new Vue({
             el: '#app',
             data: {
-                obj: []
+                obj: [
+                    {
+                        value1: 1,
+                        value2: 2
+                    }
+                ]
             },
             methods: {
                 add() {
-                    this.obj.push(1);
+                    item= {value1: '', value2: ''}
+                    this.obj.push(item);
+                },
+                con() {
+                    console.log(this.obj);
                 }
             }
         });
