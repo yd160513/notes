@@ -10,8 +10,7 @@
 
 <body>
   <div id="app">
-    <input-number v-model="value" :max="10" :min="0"></input-number>
-    父组件<input type="text" v-model="value">
+    <input-number v-model="value" :max="10" :min="0" :step="5"></input-number>
   </div>
   <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
   <script src="./input-number.js"></script>
