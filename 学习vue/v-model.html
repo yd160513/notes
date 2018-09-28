@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>v-model</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.5.17/dist/vue.js"></script>
+</head>
+<body>
+    <!-- <div id="app">
+        <input type="text" v-model="sth">
+        <input type="text" :value="sth" @input="sth = $event.target.value">
+    </div>
+    <script>
+        var vm = new Vue({
+            el: '#app',
+            data: {
+                sth: ''
+            }
+        });
+    </script> -->
+
+    <!-- <div id="app1">
+        <currency-input v-model="price"></currency-input>
+        <span>{{price}}</span>
+    </div>
+    <script>
+        Vue.component('currency-input', {
+            template: `
+                <span>
+                    <input ref="input" :value="value" @input="$emit('input', $event.target.value)" />
+                </span>
+            `,
+            props: ['value']
+        })
+        var vm = new Vue({
+            el: '#app1',
+            data: {
+                price: 100
+            }
+        });
+    </script> -->
+
+    <!-- <div id="app2">
+        <input type="checkbox" v-model="sth">
+        <input type="checkbox" :checked="sth" @input="sth = $event.target.checked">
+    </div>
+    <script>
+        var vm = new Vue({
+            el: "#app2",
+            data: {
+                sth: ''
+            }
+        });
+    </script> -->
+
+    <div id="app3">
+        <test-test v-model="test"></test-test>
+        <span>{{test}}</span>
+    </div>
+    <script>
+        Vue.component('test-test', {
+            template: `<input type="checkbox" @change="$emit('bala', '$event.target.checked')" />`,
+            props: ['checked']
+        })
+        var vm = new Vue({
+            el: "#app3",
+            data: {
+                test: ''
+            }
+        });
+    </script>
+</body>
+</html>

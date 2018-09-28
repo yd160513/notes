@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.5.17/dist/vue.js"></script>
+</head>
+<body>
+    <div id="app">
+        <ul>
+            <todo-item
+            v-for="item in list"
+            :todo="item"
+            :key="item.id"
+            ></todo-item>
+        </ul>
+    </div>
+    <script>
+        Vue.component('todo-item', {
+            props: ['todo'],
+            template: '<li>{{todo.text}}</li>'
+        });
+        var app = new Vue({
+            el: '#app',
+            data: {
+                list: [
+                    {id: 0, text: '这是第一条数据'},
+                    {id: 1, text: '这是第二条数据'}
+                ]
+            }
+        });
+    </script>
+
+
+    <div id="app1">
+        <my-first-component></my-first-component>
+        <my-component
+        :key="item.id"
+        :item="item"
+        v-for="item in list"
+        ></my-component>
+    </div>
+    <script>
+        Vue.component('my-first-component', {
+            template: '<h1>这是我的一个组件</h1>'
+        });
+        Vue.component('my-component', {
+            props: ['item'],
+            template: '<p>{{item.text}}</p>'
+        });
+        var app1 = new Vue({
+            el: '#app1',
+            data: {
+                list: [
+                    {id: 0, text: '这是第一条数据'},
+                    {id: 1, text: '这是第二条数据'}
+                ]
+            }
+        });
+    </script>
+
+
+</body>
+</html>
