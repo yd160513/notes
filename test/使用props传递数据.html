@@ -15,12 +15,12 @@
     <script>
         Vue.component('first-component', {
             props: ['message'],
-            template: '<div>{{ message.length }}</div>'
+            template: '<div>{{ message }}</div>'
         })
         var vm = new Vue({
             el: '#app',
             data: {
-                message: [1, 2]
+                message: 3
             }
         });
     </script>

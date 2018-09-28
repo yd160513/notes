@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>使用props传递数据2</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+</head>
+
+<body>
+    <div id="app">
+        <first-component :message="message"></first-component>
+        父组件的input: <input type="text" v-model="message" />
+    </div>
+    <script>
+        Vue.component('first-component', {
+            // props: ['message'],
+            props: {
+                message: {
+                    type: String,
+                    default: '0'
+                }
+            },
+            template: `
+            <div>
+                <div>props中的数据给到computed：{{ num }}，会变</div>
+                <div>props中的数据给到data：{{ msg }}，不会变</div>
+            </div>
+            `,
+            // template: '<div>子组件的input：<input type="text" v-model="msg" /></div>',
+            data() {
+                return {
+                    msg: this.message
+                }
+            },
+            computed: {
+                num() {
+                    return this.message
+                }
+            }
+        })
+        var vm = new Vue({
+            el: '#app',
+            data: {
+                message: '4'
+            }
+        });
+    </script>
+</body>
+
+</html>
