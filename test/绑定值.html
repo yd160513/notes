@@ -1,24 +1,27 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>绑定值</title>
-    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>绑定值</title>
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
 </head>
+
 <body>
   <div id="app">
-      <input type="radio" v-model="isChecked" />
+    <input type="radio" v-model="isChecked" />
   </div>
   <script>
-      var vm = new Vue({
-          el: '#app',
-          data: {
-              isChecked: false,
-              checkedTxt: '123'
-          }
-      });
-  </script> 
+    var vm = new Vue({
+      el: '#app',
+      data: {
+        isChecked: false,
+        checkedTxt: '123'
+      }
+    });
+  </script>
 </body>
+
 </html>
