@@ -1,7 +1,7 @@
 Vue.component('pane', {
   name: 'pane',
   template: `
-    <div class="pane" v-show="isShow">
+    <div class="pane" v-show="isShow" :style="{display: isDisplay}" :closable="isClosable">
       <slot></slot>
     </div>`,
   props: {
@@ -16,14 +16,14 @@ Vue.component('pane', {
     },
     // 可否关闭
     closable: {
-      type: Boolean,
-      default: false
+      type: Boolean
     }
   },
   data() {
     return {
       // 用来控制对应标签页的显示和隐藏
-      isShow: true
+      isShow: true,
+      isClosable: this.closable
     }
   },
   methods: {

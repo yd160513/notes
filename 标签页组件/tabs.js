@@ -9,7 +9,7 @@ Vue.component('tabs', {
           v-for="(item, index) in navList"
           @click="handleChange(index)">
             {{ item.label }}
-            <span :style="{display: isDisplay} " @click="changeHide(index)">x</span>
+            <span :class="closePane()" v-if="item.closable" @click="onClick(item.label)">x</span>
         </div>
       </div>
       <div class="tabs-content">
@@ -19,7 +19,7 @@ Vue.component('tabs', {
     </div>
   `,
   props: {
-    // 这里的value是为了可以使用v-model
+    // 这里的value是为了父组件可以使用v-model
     value: {
       type: [String, Number]
     }
@@ -45,15 +45,27 @@ Vue.component('tabs', {
       ]
     },
     // 隐藏
-    changeHide(ind) {
+    onClick(item) {
       var tabs = this.getTabs();
       var _this = this;
-      tabs.forEach(function (tab, index) {
-          if (!_this.currentValue) {
-            _this.currentValue = tab.name || index;
-          }
-        return _this.isDisplay = index === ind ? 'none' : 'inline-block';
+      // debugger
+      tabs.forEach(function (tab) {
+        if (tab.label === item) {
+          _this.isDisplay = 'none';
+        }
       })
+    },
+    closePane() {
+      // debugger
+      // this.$children[index].isDisplay = 'none';
+      // console.log(index);
+      // console.log(this);
+      // console.log(this.$children);
+      return [
+        {
+          'display-none': this.isDisplay
+        }
+      ]
     },
     // 点击tab标题触发
     handleChange(index) {
@@ -68,7 +80,7 @@ Vue.component('tabs', {
     },
     getTabs() {
       // 通过遍历子组件，得到所有的pane组件
-      return this.$children.filter(function(item) {
+      return this.$children.filter(function (item) {
         return item.$options.name === 'pane';
       })
     },
@@ -76,10 +88,11 @@ Vue.component('tabs', {
     updateNav() {
       this.navList = [];
       var _this = this;
-      this.getTabs().forEach(function(pane, index) {
+      this.getTabs().forEach(function (pane, index) {
         _this.navList.push({
           label: pane.label,
-          name: pane.name || index
+          name: pane.name || index,
+          closable: pane.closable
         });
         // 如果没有给pane设置name，默认设置它的索引
         if (!pane.name) {
@@ -98,7 +111,7 @@ Vue.component('tabs', {
     updateStatus() {
       var tabs = this.getTabs();
       var _this = this;
-      tabs.forEach(function(tab) {
+      tabs.forEach(function (tab) {
         return tab.isShow = tab.name === _this.currentValue;
       })
     }
@@ -110,6 +123,7 @@ Vue.component('tabs', {
     currentValue() {
       // 在当前选中的tab发生改变时，更新pane的显示状态
       this.updateStatus();
-    }
+    },
+
   }
 });

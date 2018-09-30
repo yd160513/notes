@@ -46,3 +46,7 @@
 .tabs-content {
   padding: 8px 0;
 }
+
+.display-none {
+  display: none;
+}
