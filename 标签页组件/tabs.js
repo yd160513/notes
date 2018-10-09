@@ -100,8 +100,8 @@ Vue.component('tabs', {
         }
         // 设置当前选中的tab的索引
         if (index === 0) {
-          if (!this.currentValue) {
-            this.currentValue = pane.name || index;
+          if (!_this.currentValue) {
+            _this.currentValue = pane.name || index;
           }
         }
       });

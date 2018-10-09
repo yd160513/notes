@@ -1,0 +1,9 @@
+.box{
+  border-bottom: 1px solid red;
+  margin-bottom: 10px;
+  padding-bottom: 30px;
+}
+.btn_box{
+  display: inline-block;
+  margin-right: 20px;
+}
