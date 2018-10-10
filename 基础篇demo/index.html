@@ -16,7 +16,7 @@
     <div class="box" v-show="sexShow">
       <div class="main">
         <content-box title="1.请问您的性别是：">
-          <radio-btn v-for="i in sexArr" :label="isChecked" :key="i.id" v-model="i.sex" :id="i.id"></radio-btn>
+          <radio-btn v-for="i in sexArr" @change-input="changeInputValue" :label="isChecked" :key="i.id" v-model="i.sex" :id="i.id"></radio-btn>
         </content-box>
       </div>
       <div class="bottom">

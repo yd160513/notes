@@ -21,9 +21,9 @@ Vue.component('radio-btn', {
     }
   },
   watch: {
-    value(val) {
-      debugger
-      this.$emit('input', val);
+    // 监听本组件选项的变化，然后传给父页面
+    labelInfo(val) {
+      this.$emit('change-input', val);
     }
   }
 });

@@ -15,7 +15,7 @@ Vue.component('next-btn', {
         this.$emit('change-sex-show', false);
         return;
       }
-      console.log(this.isChecked);
+      alert('请更改性别选项！');
     }
   }
 });
