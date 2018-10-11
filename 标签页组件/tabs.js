@@ -48,15 +48,13 @@ Vue.component('tabs', {
     onClick(item) {
       var tabs = this.getTabs();
       var _this = this;
-      // debugger
       tabs.forEach(function (tab) {
         if (tab.label === item) {
           _this.isDisplay = 'none';
         }
       })
     },
-    closePane() {
-      // debugger
+    closePane
       // this.$children[index].isDisplay = 'none';
       // console.log(index);
       // console.log(this);

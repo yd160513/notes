@@ -32,6 +32,10 @@ var vm = new Vue({
     // 接收到子组件传过来的值并更改选中的值
     changeInputValue(val) {
       this.isChecked = val;
+    },
+    // 重置按钮传过来的值
+    onResetVal(val) {
+      this.isChecked = val;
     }
   }
 });

@@ -65,7 +65,6 @@ var Time = {
 }
 Vue.directive('time', {
   bind(el, binding) {
-    debugger
     el.innerHTML = Time.getFormatTime(binding.value);
     el._timeout_ = setInterval(function() {
       el.innerHTML = Time.getFormatTime(binding.value);

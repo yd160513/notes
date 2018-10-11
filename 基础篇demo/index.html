@@ -21,6 +21,7 @@
       </div>
       <div class="bottom">
         <next-btn :is-checked="isChecked" @change-sex-show="onSexShow"></next-btn>
+        <reset-btn :reset-val="isChecked" @change-reset-val="onResetVal"></reset-btn>
       </div>
     </div>
     <!-- 爱好 -->
@@ -51,6 +52,7 @@
   <script src="./components/contentBox.js"></script>
   <script src="./components/radio.js"></script>
   <script src="./components/nextBtn.js"></script>
+  <script src="./components/resetBtn.js"></script>
   <script src="./index.js"></script>
 </body>
 
