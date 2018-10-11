@@ -54,7 +54,7 @@ Vue.component('tabs', {
         }
       })
     },
-    closePane
+    closePane(){
       // this.$children[index].isDisplay = 'none';
       // console.log(index);
       // console.log(this);
