@@ -14,10 +14,10 @@ var config = {
     rules: [
       {
         test: /\.css$/,
-        use: [
-          'style-loader',
-          'css-loader'
-        ]
+        use: ExtractTextPlugin.extract({
+          use: 'style-loader',
+          fallback: 'css-loader'
+        })
       }
     ]
   },
