@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>手机号隐藏</title>
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+</head>
+
+<body>
+  <div id="app">
+    <span>{{ iphone | filterIphone }}</span>
+  </div>
+
+
+
+  <script>
+    var vm = new Vue({
+      el: '#app',
+      data() {
+        return {
+          iphone: '15230348747'
+        }
+      },
+      filters: {
+        filterIphone(val) {
+          if(val === '') return '';
+          value = val.toString().substr(7, 4);
+          value = '*'.repeat(7) + value;
+          let endMember = value.substr(-1, 1);
+          if(!(endMember % 2)) {
+            value = value + '中奖';
+          } else {
+            value = value + '谢谢参与';
+          }
+          return value;
+        }
+      }
+    });
+  </script>
+</body>
+
+</html>

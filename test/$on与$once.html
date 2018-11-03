@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>$on与$once</title>
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+</head>
+
+<body>
+  <div id="app">
+      <button @click="demo">到五的时候取消监听</button>
+      <p>{{ data }}</p>
+      <button @click="demo2">只监听一次，传一个参数过来</button>
+      <p>{{ data2 }}</p>
+  </div>
+  <script>
+    var vm = new Vue({
+      el: '#app',
+      data() {
+        return {
+          data: 0,
+          data2: 0
+        }
+      },
+      created() {
+        this.$on('demo', () => {
+          this.data++;
+          if(this.data === 5) this.$off('demo'); 
+        });
+        this.$once('demo2', (value) => this.data2 += value);
+      },
+      methods: {
+        demo() {
+          this.$emit('demo');
+        },
+        demo2() {
+          this.$emit('demo2', 10);
+        }
+      }
+    });
+  </script>
+</body>
+
+</html>

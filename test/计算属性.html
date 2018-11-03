@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>计算属性</title>
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+</head>
+
+<body>
+  <div id="app">
+    <div>
+      <div>比赛时间：{{ time }}s</div>
+      <div>比赛播报：{{ result }}</div>
+      <div>中国队进球：{{ team.china }}</div>
+      <span><button @click="team.china++">中国队进球</button></span>
+      <div>韩国队进球：{{ team.korea }}</div>
+      <span><button @click="team.korea++">韩国队进球：</button></span>
+    </div>
+  </div>
+
+  <script>
+    var vm = new Vue({
+      el: '#app',
+      data() {
+        return {
+          time: 0,
+          // result: '',
+          team: {
+            china: 0,
+            korea: 0
+          }
+        }
+      },
+      created() {
+        var clearIntervalId = setInterval(() => {
+          this.time++;
+          if(this.time == 90) {
+            clearInterval(clearIntervalId);
+          }
+        }, 1000);
+      },
+      computed: {
+        result() {
+          if(this.time < 90) {
+            if(this.team.china > this.team.korea) {
+              return '中国队领先';
+            } else if(this.team.korea > this.team.china) {
+              return '韩国队领先';
+            } else {
+              return '比赛僵持';
+            }
+          } else {
+            if(this.team.china > this.team.korea) {
+              return '中国队赢';
+            } else if(this.team.korea > this.team.china) {
+              return '韩国队赢';
+            } else {
+              return '平局';
+            }
+          }
+        }
+      }
+    });
+  </script>
+</body>
+
+</html>
