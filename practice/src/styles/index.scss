@@ -1,0 +1,36 @@
+html {
+  height: 100%;
+  box-sizing: border-box;
+}
+
+body {
+  height: 100%;
+  margin: 0;
+}
+
+#app {
+  height: 100%;
+}
+
+.sidebar-container {
+  height: 100%;
+  width: 180px !important;
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  z-index: 999;
+}
+
+.scroll-wrapper {
+  height: 100%;
+}
+
+.el-menu {
+  height: 100%;
+  // background-color: #304156;
+}
+
+.main-container {
+  margin-left: 180px;
+}
