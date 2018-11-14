@@ -11,11 +11,15 @@
     "build": "node build/build.js"
   },
   "dependencies": {
+    "axios": "^0.18.0",
     "element": "^0.1.4",
     "element-ui": "^2.4.9",
     "js-cookie": "^2.2.0",
     "less": "^3.8.1",
+    "mock": "^0.1.1",
+    "mockjs": "^1.0.1-beta3",
     "node-sass": "^4.10.0",
+    "normalize": "^0.3.1",
     "nprogress": "^0.2.0",
     "sass-loader": "^7.1.0",
     "scss": "^0.2.4",

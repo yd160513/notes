@@ -34,8 +34,8 @@ export default {
   data() {
     return {
       loginForm: {
-        name: "",
-        password: ""
+        name: "admin",
+        password: "1111111"
       },
       userFomrRules: {
         name: [{ required: true, message: "请输入用户名", trigger: "blur" }],
@@ -51,7 +51,7 @@ export default {
             type: "success",
             message: "验证通过"
           });
-          this.$store.dispatch("loginByUserName", this.loginForm);
+          this.$store.dispatch("LoginByUsername", this.loginForm);
           this.$router.push({
             path: '/'
           });

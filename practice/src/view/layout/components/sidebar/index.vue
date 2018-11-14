@@ -1,18 +1,29 @@
 <template>
-  <scroll-bar>
-    <el-menu mode="vertical" :default-active="$route.path" background-color="#304156" text-color="#bfcbd9" active-text-color="#409EFF">
+  <el-scrollbar wrap-class="scrollbar-wrapper">
+    <el-menu mode="vertical"
+      :default-active="$route.path"
+      background-color="#304156"
+      text-color="#bfcbd9"
+      active-text-color="#409EFF">
       <sidebar-item :routes="permission_routers" @click="changePage(item.path)"></sidebar-item>
     </el-menu>
-  </scroll-bar>
+  </el-scrollbar>
 </template>
 <script>
+import { mapGetters } from 'vuex'
 import SidebarItem from "./sidebarItem";
-import ScrollBar from '@/components/ScrollBar'
 
 export default {
   components: {
-    SidebarItem,
-    ScrollBar
+    SidebarItem
+  },
+  computed: {
+    ...mapGetters([
+      'sidebar'
+    ]),
+    isCollapse() {
+      return !this.sidebar.opened
+    }
   },
   data() {
     return {

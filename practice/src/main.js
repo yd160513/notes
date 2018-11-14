@@ -2,6 +2,8 @@
 // (runtime-only or standalone) has been set in webpack.base.conf with an alias.
 import Vue from 'vue'
 
+// import 'normalize.css/normalize.css'
+
 import Element from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 
@@ -9,7 +11,8 @@ import App from './App'
 import router from './router'
 import store from './store'
 
-import './permission'
+// import './permission'
+import './mock'
 
 import '@/styles/index.scss'
 

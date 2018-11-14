@@ -45,4 +45,10 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
+.scroll-container {
+  .scroll-wrapper {
+    background-color: red;
+  }
+}
+
 </style>
