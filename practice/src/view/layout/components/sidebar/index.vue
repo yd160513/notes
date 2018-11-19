@@ -37,6 +37,11 @@ export default {
           id: '2',
           name: "计算属性切换颜色",
           path: "/changeColor"
+        },
+        {
+          id: '3',
+          name: "深度选择器",
+          path: "/depthSelector"
         }
       ]
     };

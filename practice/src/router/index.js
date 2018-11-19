@@ -4,6 +4,7 @@ import Router from 'vue-router'
 import Login from '@/view/Login'
 import CountDown from '@/view/countDown'
 import ChangeColor from '@/view/computedChangeColor'
+import DepthSelector from '@/view/depthSelector'
 import roleTestPage from '@/view/roleTestPage'
 import Layout from '@/view/Layout'
 
@@ -34,6 +35,11 @@ export const constantRouterMap = [
       path: '/changeColor',
       name: 'changeColor',
       component: ChangeColor
+    },
+    {
+      path: '/depthSelector',
+      name: 'depthSelector',
+      component: DepthSelector
     }]
   }
 ];

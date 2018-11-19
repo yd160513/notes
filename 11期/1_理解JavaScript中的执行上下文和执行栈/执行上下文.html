@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>执行上下文</title>
+  <style>
+    .left-box {
+      width: 50%;
+      float: left;
+      border-right: 1px solid #999;
+    }
+    .right-box {
+      float: left;
+      padding-left: 8px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="left-box">
+    <h3>执行上下文的创建过程：</h3>
+    <pre>
+      <!-- 
+        全局执行上下文：
+          1. 确定绑定this的值 ThisBinding
+          2. 词法环境 LexicalEnvironment
+          3. 变量环境 VarableEnvironment
+      -->
+      GlobalExectionContext: {
+        <!-- 
+          ThisBinding的值包括：
+            1. 全局对象
+                this 的值指向全局对象，
+                在浏览器中this 的值指向 window对象，
+                而在nodejs中指向这个文件的module对象。
+            2. 取决于函数的调用方式
+                具体有：默认绑定、隐式绑定、显式绑定（硬绑定）、new绑定、箭头函数，
+        -->
+        ThisBinding: Global Object,
+        <!-- 
+          词法环境包括：
+            1. 环境记录
+            2. 对外部环境的引用
+        -->
+        LexicalEnvironment: {
+          <!-- 
+            环境记录：
+              1. 声明性环境记录：存储变量(let/const,var声明的要存放在变量环境中)、函数和参数。函数环境包涵声明性环境
+              2. 对象环境记录： 用户定义在全局执行上下文中出现的变量和函数的关联。全局函数包涵对象函数记录
+          -->
+          EnvironmentRecord: {
+            Type: 'Object',
+            let声明的变量且不被初始化,
+            const声明的常亮且不被初始化,
+            function名称,声明存储在函数执行上下文中
+          },
+          <!-- 
+            对外部环境的引用：
+              1. 全局环境：
+                  1.1 （在全局执行上下文中）是一个没有外部环境的词法环境。全局环境下为null，
+                      它拥有全局对象及其所绑定的属性及方法，以及用户自定义的全局变量，this的值指向这个全局对象
+              2. 函数环境:
+                  2.1 用户在函数中定义的变量被存放在函数环境记录中，
+                      对外部环境的引用可以是全局环境，也可以是包涵内部函数的外部函数环境
+                  2.2 包含arguments对象，该对象包含了索引和传递给函数的参数之间的映射以及传递给函数的参数的长度（数量）
+                      例: Arguments: {0: 2, 1: 3, length: 2}
+          -->
+          Outer: null <!-- 在全局变量中所以为null,标识符绑定在这里 -->
+        },
+        <!-- 变量环境也是词法环境 -->
+        VarableEnvironment: {
+          EnvironmentRecord: {
+            Type: 'Object',
+            var声明的变量且初始化为undefined
+          },
+          Outer: null
+        }
+      }
+      FunctionExectionContext: {
+        <!-- 确定this的值 -->
+        ThisBinding: Global Object, <!-- 取决于函数被调用的方式 -->
+        <!-- 词法环境 -->
+        LexicalEnvironment: {
+          <!-- 环境记录 -->
+          EnvironmentRecord: {
+            <!-- 类型：1. 声明性环境记录Declarative  2. 对象环境记录Object -->
+            Type: 'Declarative',
+            const声明的常亮,
+            let声明的变量,
+            Function声明
+          }
+          <!-- 对外部环境的引用 -->
+          Outer: GlobalExectionContext
+        },
+        <!-- 变量环境 -->
+        VarableEnvironment: {
+          EnvironmentRecord: {
+            Type: 'Declarative',
+            var声明的变量且初始化为undefined
+          },
+          Outer: GlobalExectionContext
+        }
+      }
+    </pre>
+  </div>
+  <div class="right-box">
+    <h3>执行上下文的执行过程：</h3>
+    <pre>
+      在此阶段，完成对所有变量的分配，最后执行代码。
+      注：在执行阶段，
+          如果 Javascript 引擎在源代码中声明的实际位置找不到 let 变量的值，
+          那么将为其分配 undefined 值。
+    </pre>
+  </div>
+</body>
+
+</html>
