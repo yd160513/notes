@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>yield</title>
+</head>
+<body>
+  <script>
+    function* demo() {
+      console.log('hello' + (yield));
+      // console.log('hello' + yield); // 报错
+    }
+    var d = demo();
+    d.next();
+  </script>
+</body>
+</html>
