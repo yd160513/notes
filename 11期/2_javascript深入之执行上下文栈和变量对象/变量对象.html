@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>变量对象</title>
+</head>
+<body>
+  <script>
+    /*
+      全局上下文：
+        变量对象初始化是全局对象
+      函数上下文：
+        活动对象（AO）和变量对象（VO）的区别：
+          1. 变量对象（VO）是规范上或者是JS引擎上实现的，并不能在JS环境中直接访问。
+          2. 当进入一个执行上下文后，这个变量对象才被激活，活动对象上的各种属性才能被访问
+          总结：未进入执行阶段之前，变量对象(VO)中的属性都不能访问！
+                但是进入执行阶段之后，变量对象(VO)转变为了活动对象(AO)，里面的属性都能被访问了，然后开始进行执行阶段的操作。
+      执行上下文包括两个阶段：
+        1. 进入执行上下文
+            变量对象包括：
+              1. 函数所有的形参（函数执行上下文存在的时候）：没有实参，属性值为undefined
+              2. 函数声明：如果变量对象已经存在相同名称的属性，则完全替换这个属性
+              3. 变量声明：如果变量名称跟已经声明的形参或者函数相同，则变量声明不会干扰已经存在的这类属性
+        2. 执行代码
+          再次修改变量对象的属性值
+    */
+    function foo(a) {
+      var b = 2;
+      function c() {}
+      var d = function() {};
+
+      b = 3;
+    }
+
+    foo(1);
+
+    // 进入执行上下文
+    // AO = {
+    //   arguments: {
+    //     0: 1,
+    //     length: 1
+    //   },
+    //   a: 1,
+    //   b: undefined, // 初始化为undefined
+    //   c: reference to function c(){},
+    //   d: undefined
+    // }
+
+    // 执行代码
+    // AO = {
+    //   arguments: {
+    //     0: 1,
+    //     length: 1
+    //   },
+    //   a: 1,
+    //   b: 3,
+    //   c: reference to function c(){},
+    //   d: reference to FunctionExpression "d"
+    // }
+  </script>
+</body>
+</html>

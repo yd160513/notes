@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>异步操作的同步化表达</title>
+</head>
+<body>
+  <script>
+    function* main() {
+      var result = yield request('http://some.url');
+      var resp = JSON.parse(result);
+      console.log(resp.value);
+    }
+    function request(url) {
+      makeAjaxCall(url, function(res) {
+        it.next(res);
+      })
+    }
+    var it = main();
+    it.next();
+    // 异步操作的同步写法
+  </script>
+</body>
+</html>

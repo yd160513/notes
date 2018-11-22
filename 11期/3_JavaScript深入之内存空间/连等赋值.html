@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>连等赋值</title>
+</head>
+<body>
+  <script>
+    // 问题
+    var a = {n: 1};
+    var b = a;
+    a.x = a = {n: 2};
+    console.log(a.x);
+    console.log(b.x);
+  </script>
+  <!-- 解析: https://www.cnblogs.com/xxcanghai/p/4998076.html -->
+</body>
+</html>

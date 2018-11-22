@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>变量提升</title>
+</head>
+<body>
+  <script>
+    foo(); // 报错，因为下边的都是变量声明，而不是函数声明，所以在执行上下文的时候只是声明并没有赋值，所以报错；
+    var foo = function() {
+      console.log('foo1');
+    }
+    foo(); // foo1 foo被赋值
+    var foo = function() {
+      console.log('foo2');
+    }
+    foo(); // foo2 foo被重新赋值
+  </script>
+</body>
+</html>

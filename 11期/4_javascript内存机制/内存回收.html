@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>内存回收</title>
+</head>
+<body>
+  <pre>
+      局部变量和全局变量的销毁
+        局部变量：局部作用域中，当函数执行完毕，局部变量也就没有存在的必要了，因此垃圾收集器很容易做出判断并回收。
+        全局变量：全局变量什么时候需要自动释放内存空间则很难判断，所以在开发中尽量避免使用全局变量。
+      以Google的V8引擎为例，V8引擎中所有的JS对象都是通过堆来进行内存分配的
+        初始分配：当声明变量并赋值时，V8引擎就会在堆内存中分配给这个变量。
+        继续申请：当已申请的内存不足以存储这个变量时，V8引擎就会继续申请内存，直到堆的大小达到了V8引擎的内存上限为止。
+      V8引擎对堆内存中的JS对象进行分代管理
+        新生代：存活周期较短的JS对象，如临时变量、字符串等。
+        老生代：经过多次垃圾回收仍然存活，存活周期较长的对象，如主控制器、服务器对象等。
+  </pre>
+</body>
+</html>

@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Generator.prototype.throw()</title>
+</head>
+<body>
+  <script>
+    // var g = function* () {
+    //   try {
+    //     yield;
+    //   } catch (e) {
+    //     console.log('内部捕获', e);
+    //   }
+    // }
+    // debugger
+    // var i = g();
+    // i.next();
+
+    // try {
+    //   i.throw('a'); // 这里的异常会被generator里的catch捕获到
+    //   i.throw('b'); // 因为上边的catch已经执行过了，所以只能被外边的catch捕获到
+    // } catch (e) {
+    //   console.log('外部捕获', e);
+    // }
+
+debugger
+
+// var g = function* () {
+//   try {
+//     yield;
+//   } catch (e) {
+//     console.log(e);
+//   }
+// };
+
+// var i = g();
+// i.next();
+ 
+// i.throw(new Error('出错了！')); // generator里的catch捕获到
+
+
+
+
+//     var g = function* () {
+//       while (true) {
+//         try {
+//           yield;
+//         } catch (e) {
+//           if (e != 'a') throw e;
+//           console.log('内部捕获', e);
+//         }
+//       }
+//     }
+//     var i = g();
+//     i.next();
+// debugger
+//     try {
+//       throw new Error('a'); // 由外部的catch捕获到，因为这里用的是throw命令而不是遍历器对象上的throw方法
+//       throw new Error('b');
+//     } catch (e) {
+//       console.log('外部捕获', e);
+//     }
+
+var gen = function* () {
+  yield console.log('hello');
+  yield console.log('world');
+}
+var g = gen();
+g.next();
+
+try {
+  throw new Error();
+} catch (e) {
+  g.next()
+}
+
+  </script>
+</body>
+</html>
