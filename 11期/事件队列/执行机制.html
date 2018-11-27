@@ -8,7 +8,54 @@
 </head>
 <body>
   <script>
-  
+    // 一个宏任务就是一个事件循环
+    // 1 7 6 8 2 4 3 5 9 11 10 12 // node环境下的事件监听依赖和前端环境不完全相同，输出顺序可能会有误差
+    // 第一轮：1 7 6 8
+    // 第二轮：2 4 3 5
+    // 第三轮：9 11 10 12
+    console.log("1");
+
+    setTimeout(function() {
+      console.log('2');
+      process.nextTick(function() {
+        console.log('3');
+      });
+      new Promise(function(resolve) {
+        console.log('4');
+        resolve();
+      })
+      .then(function() {
+        console.log('5');
+      });
+    });
+
+    process.nextTick(function() {
+      console.log('6');
+    });
+
+    new Promise(function(resolve) {
+      console.log('7');
+      resolve();
+    })
+    .then(function() {
+      console.log('8');
+    });
+
+    setTimeout(function() {
+      console.log('9');
+      process.nextTick(function() {
+        console.log('10');
+      });
+      new Promise(function(resolve) {
+        console.log('11');
+        resolve();
+      })
+      .then(function() {
+        console.log('12');
+      });
+    });
+
+
   </script>
 </body>
 </html>

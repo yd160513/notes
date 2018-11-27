@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>this_作用域_闭包_对象</title>
+</head>
+<body>
+  <script>
+    /* 
+      箭头函数的this指向
+      1. 箭头函数不绑定this,箭头函数中的this相当于普通变量。
+      2. 箭头函数的this寻值行为与普通变量相同，在作用域中逐级寻找。
+      3. 箭头函数的this无法通过bind，call，apply来直接修改。
+      4. 改变作用域中this的指向可以改变箭头函数的this
+      5. eg. `function closure(){()=>{//code }}`，
+          在此例中，我们通过改变封包环境`closure.bind(another)()`，
+          来改变箭头函数this的指向。
+     */
+    var name = 'window';
+    var parson1 = {
+      name: 'person1',
+      show1: function() {
+        console.log(this.name);
+      },
+      show2: () => console.log(this.name),
+      show3: function() {
+        return function() {
+          console.log(this.name);
+        }
+      },
+      show4: function() {
+        return () => console.log(this.name);
+      }
+    };
+    var person2 = {
+      name: 'person2'
+    };
+    person1.show1(); // person1
+    person1.show1.call(person2); // person2
+
+    person1.show2(); // window
+    person1.show2.call(person2); // window
+
+    person1.show3()(); // window
+    person1.show3().call(person2) // person2
+    person1.show3.call(person2)() // window
+
+    person1.show4()(); // person1
+    person1.show4().call(person2) // person1
+    person1.show4.call(person2)() // person2
+  </script>
+</body>
+</html>
