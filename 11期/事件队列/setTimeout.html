@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>setTimeout</title>
+</head>
+
+<body>
+  <script>
+    /* 
+      以下setTimeout会延时不止三秒：
+        因为js是单线程，所以得等到主线程上的执行完之后才能去执行异步任务，
+        主线程上的时间远远长于异步任务，所以延迟时间大于3秒
+
+     */
+    setTimeout(() => {
+      task()
+    }, 3000)
+
+    sleep(10000000)
+
+    // setTimeout(fn,0) // 这样的代码不代表立即执行，代表只要执行栈为空就立刻执行
+    // setTimeout： 0毫秒实际上达不到，HTML标准规定最少是4毫秒
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Promise和process.nextTick()</title>
+</head>
+<body>
+  <script>
+    /* 
+      process.nextTick(callback): 在事件循环的下一次循环中调用callback回调函数
+      macro-task(宏任务)：整体代码script、setTimeout、setInterval
+      micro-task(微任务)：Promise、process.nextTick
+      事件循环顺序决定js代码执行顺序：
+        1. 进入整体代码（宏任务）后开始第一次循环
+        2. 执行所有的微任务
+        3. 再次从宏任务开始，找到其中一个任务队列执行完毕，再执行所有的微任务
+     */
+     // 1.promise 2.console 3.then 4.setTimeout
+     setTimeout(function() {
+       console.log('setTimeout');
+     });
+     new Promise(function(resolve) {
+       console.log('promise');
+     })
+     .then(function() {
+       console.log('then');
+     });
+     console.log('console');
+
+  </script>
+</body>
+</html>

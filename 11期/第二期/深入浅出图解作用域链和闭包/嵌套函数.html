@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>嵌套函数</title>
+</head>
+
+<body>
+  <script>
+    function createCounter(initial) {
+      var counter = initial;
+      function increment(value) {
+        counter += value;
+      }
+      function get() {
+        return counter;
+      }
+      return {
+        increment: increment,
+        get: get
+      };
+    }
+    var myCounter = createCounter(100);
+    console.log(myCounter.get());   // 返回 100
+    myCounter.increment(5);
+    console.log(myCounter.get());   // 返回 105
+    /* 
+      当 函数返回 没有被引用的时候就会被垃圾回收器回收
+      闭包：即使外部函数返回了，函数对象仍会引用它被 创建时 的作用域对象
+
+      当myCounter.increment() 或 myCounter.get()被调用时，
+      新的作用域对象会被创建，并且该作用域对象的父作用域对象(被创建时产生的父作用域对象-createCounter)
+      会是当前可以直接访问的作用域对象。
+     */
+
+    var a, b;
+    a = myCounter1.get();   // a 等于 100
+    b = myCounter2.get();   // b 等于 200
+    myCounter1.increment(1);
+    myCounter1.increment(2);
+    myCounter2.increment(5);
+    a = myCounter1.get();   // a 等于 103
+    b = myCounter2.get();   // b 等于 205
+  </script>
+</body>
+
+</html>

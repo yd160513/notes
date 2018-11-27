@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>深入浅出图解作用域链和闭包</title>
+</head>
+
+<body>
+  <script>
+    /* 
+      作用域链和原型链的区别：
+        在作用域链上查找不到会报ReferenceError  引用错误
+        在原型链上查找不到的时候会返回undefined
+     */
+    var foo = 1;
+    var bar = 2;
+    function myFunc() {
+      //-- define local-to-function variables
+      var a = 1;
+      var b = 2;
+      var foo = 3;
+      console.log("inside myFunc");
+    }
+    console.log("outside");
+    //-- and then, call it:
+    myFunc();
+    /* 
+      函数名称在执行上下文时被创建，它的引用是一个函数执行上下文，函数执行上下文中包括一个函数对象，
+      函数对象中包含着函数的源代码以及它的属性，最重要的是还包含着这个函数对象被创建的时候的作用域对象（比如myFunc被创建时就是全局作用域对象）
+     */
+  </script>
+</body>
+
+</html>
