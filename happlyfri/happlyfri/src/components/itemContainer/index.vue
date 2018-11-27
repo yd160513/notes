@@ -14,20 +14,35 @@
       <!-- 具体题目 -->
       <div class="item_back item_container_style">
         <div class="item_list_container" v-if="itemDetail.length > 0">
-          
+          <header class="item_title">{{itemDetail[itemNum-1].topic_name}}</header>
+          <ul>
+            <li v-for="(item, index) in itemDetail[itemNum-1].topic_answer" 
+                @click="choosed(index, item.topic_answer_id)" :key="index"
+                class="item_list">
+              <span class="option_style" v-bind:class="{'has_choosed':choosedNum==index}">{{chooseType(index)}}</span>
+              <span class="option_detail">{{item.answer_name}}</span>
+            </li>
+          </ul>
         </div>
       </div>
       <!-- 下一题按钮，如果是最后一题显示分数按钮 -->
-      <span class="next_item button_style">下一题</span>
-      <span class="submit_item button_style"></span>
+      <span class="next_item button_style" @click="nextItem" v-if="itemNum < itemDetail.length"></span>
+      <span class="submit_item button_style" v-else @click="submitAnswer"></span>
     </div>
   </section>
 </template>
 <script>
-import { mapState } from 'vuex'
+import { mapState, mapActions } from "vuex";
 
 export default {
   name: "itemContainer",
+  data() {
+    return {
+      itemId: null, // 题目id
+      choosedNum: null, // 选中答案的索引
+      choosedId: null // 选中答案的id
+    };
+  },
   props: {
     fatherComponent: {
       type: String,
@@ -35,11 +50,57 @@ export default {
     }
   },
   computed: mapState([
-    'itemDetail' // 题目详情
-  ])
+    "itemNum",
+    "itemDetail" // 题目详情
+  ]),
+  methods: {
+    ...mapActions(["addNum", "initializeData"]),
+    // 索引0-3对应答案A-D
+    chooseType: type => {
+      switch (type) {
+        case 0:
+          return "A";
+        case 1:
+          return "B";
+        case 2:
+          return "C";
+        case 3:
+          return "D";
+      }
+    },
+    // 选中的答案
+    choosed(type, id) {
+      this.choosedNum = type;
+      this.choosedId = id;
+    },
+    // 点击下一题
+    nextItem() {
+      if (this.choosedNum !== null) {
+        this.choosedNum = null;
+        this.addNum(this.choosedId);
+      } else {
+        alert("请选择答案");
+      }
+    },
+    // 最后一题交卷
+    submitAnswer() {
+      if (this.choosedNum !== null) {
+        this.addNum(this.choosedId);
+        this.$router.push('score');
+      } else {
+        alert('请选择答案');
+      }
+    }
+  },
+  created() {
+    if (this.fatherComponent === 'home') {
+      this.initializeData();
+      // document.body.style.backgroundImage = "url(../static/img/1-1.jpg)";
+    }
+  }
 };
 </script>
-<style lang="scss" scoped>
+<style lang="scss">
 .top_tips {
   position: absolute;
   height: 7.35rem;
