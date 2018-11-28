@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>闭包中的变量</title>
+</head>
+
+<body>
+  <script>
+    // 输出5个5
+    for (var i = 0; i < 5; i++) {
+      setTimeout(function () {
+        console.log(i);
+      }, 1000);
+    }
+    // 输出5个5
+    function createClosure() {
+      var result = [];
+      for (var i = 0; i < 5; i++) {
+        result[i] = function () {
+          return i;
+        }
+      }
+      return result;
+    }
+    console.log(createClosure()[1]()); // 5
+    console.log(createClosure()[2]()); // 5
+    console.log('-----------');
+    // 以上每个函数的作用域链中都保存着对外部函数的活动对象，因此他们引用的同一变量
+    for (var i = 0; i < 5; i++) {
+      (function (num) {
+        setTimeout(function () {
+          console.log(num);
+        }, 1000);
+      })(i)
+    }
+    for (var i = 0; i < 5; i++) {
+      setTimeout((function(num) {
+        return function () {
+          console.log(num);
+        }
+      })(i), 1000);
+    }
+
+  </script>
+</body>
+
+</html>

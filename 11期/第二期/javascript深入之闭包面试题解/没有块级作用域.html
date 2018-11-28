@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>没有块级作用域</title>
+</head>
+
+<body>
+<script>
+  function scopeTest() {
+    var scope = {};
+    if (scope instanceof Object) {
+      var j = 1;
+      for (var i = 0; i < 10; i++) {
+
+      }
+      console.log(i); // 10
+    }
+    console.log(j); // 1 // 没有块级作用域
+  }
+  scopeTest();
+</script>
+</body>
+
+</html>
