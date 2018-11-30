@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>作用域和闭包</title>
+</head>
+
+<body>
+  <!-- 
+    var a = 1;
+  一、编译流程：
+      1. 词法分析：拆分:var, a, =, 1, ;,
+      2. 语法分析
+      3. 代码生成
+  二、作用域：
+      1. 在编译阶段声明变量、函数名及赋值
+      2. 在执行阶段对变量进行赋值
+  三、作用域嵌套：
+      在当前作用域中开始查找变量，找不到就向父级进行查找，知道找到或者到达最外级报错。
+    异常：
+      TypeError： 类型错误，期望的类型与实际的类型不相符
+      ReferenceError：引用错误，不存在的变量被引用
+    词法作用域：
+      词法作用域是在定义变量和块级作用域的位置来决定的。（不考虑eval和with）
+      编译的词法阶段基本能够知道标识符所声明的位置以及是如何声明的，能够预测在执行过程中该如何去查找它们(属于优化)
+      with和eval在编译时无法对作用域进行查找优化，会将代码运行变慢。
+    函数作用域和块作用域：
+      1. 函数中的作用域：
+          属于这个函数内的变量都可以在整个函数范围内使用
+      2. 隐藏内部实现：
+          最小特权原则（最小授权/最小暴露原则）：在软件设计中应最小的暴露必要内容，而将其他内容都隐藏起来。
+          这样可以规避冲突
+      3. 函数作用域：
+          区分函数表达式和函数声明最简单的方法是看关键字function所在的位置。
+            函数声明：声明中的第一个词
+            函数表达式：声明中不是第一个词
+          立即执行函数表达式：
+            var a = 2;
+            (function IIFE() {
+                var a = 3;
+                console.log( a ); // 3
+            })();
+            console.log( a ); // 2
+            解决undefined标识符的默认值被错误覆盖导致的问题：
+              将一个参数命名为undefined，但是在传参的时候什么都不传，这样在代码中就是真的undefined
+      4. 块作用域：
+          let: 
+          const:
+          try/catch
+          with
+  四、提升：
+      1. 任何声明在某个作用域内的变量，都将附属于这个作用域
+      2. 包括变量和函数表达式在内的所有声明都将优先于代码执行被处理
+      3. var a = 1; 会被看成两个阶段：1. 编译阶段声明var a; 2. 执行阶段a = 1;
+      4. 所有变量和函数声明都会被移动到各自作用域的顶端，这个过程叫做提升
+      5. 只有声明本身会被提升，赋值不会，包括函数表达式
+      6. 在提升的过程中，函数会优先于变量，如果变量遇到同名函数，那么这个变量声明会被忽略掉
+  五、作用域闭包
+      1. 闭包：
+          当函数可以记住并访问所在的词法作用域，即使函数名是在当前词法作用域之外执行，这时就产生了闭包
+      2. 循环和闭包：
+        2.1 块级作用域和闭包
+  六、模块：
+        必要条件：
+            1. 必须有一个外部的封闭函数，该函数必须至少被调用一次（每次调用都会创建一个新的模块实例，可以通过IFEE实现单例模式）
+            2. 封闭函数必须返回至少一个内部函数，这样内部函数才能在私有作用域中形成闭包，并且可以访问或修改私有状态
+        1. import：将一个模块中的一个或多个API导入到当前作用域中，并分别绑定在一个变量上。
+        2. module：将整个模块的API导入并绑定到一个变量上。
+        3. export：将当前模块的一个标识符（变量或函数）导出为公共API
+  七、动态作用域：
+      1. 词法作用域是在写代码时或定义是确定的，关注函数的声明位置，作用域基于代码嵌套（活动对象）
+      2. 动态作用域是在运行时确定的（this也是），关注函数在何处调用，作用域基于调用栈
+      3. javascript并不具备动态作用域，它只有词法作用域，但是this机制某种程度上和动态作用域很像。
+          
+   -->
+  <script>
+    /* *******************************闭包****************************** */
+
+    // 当函数可以记住并访问所在的词法作用域，即使函数名是在当前词法作用域之外执行，这时就产生了闭包
+    function foo() {
+      var a = 2;
+      function bar() {
+        console.log(a);
+      }
+      return bar;
+    }
+    var baz = foo();
+    baz(); // 2
+
+    console.log('-----------------');
+
+    // 对函数类型的值进行传递
+    function foo1() {
+      var a = 2;
+      function baz1() {
+        console.log(a); // 2
+      }
+      bar(baz1);
+    }
+    function bar(fn) {
+      fn(); // 闭包
+    }
+    foo1();
+
+    console.log('-----------------');
+
+    // 间接的函数传递
+    var fn2;
+
+    function foo2() {
+      var a = 2;
+      function baz2() {
+        console.log(a);
+      }
+      fn2 = baz;
+    }
+    function bar2() {
+      fn2(); // 闭包
+    }
+    foo2();
+    bar2();
+
+    // 经典的闭包的例子：IIFE（立即执行函数）
+    var k = 2;
+    (function IIFE() {
+      console.log(k);
+    }());
+    console.log('***************************************************************');
+    /* *******************************循环和闭包****************************** */
+    for (var i = 1; i < 5; i++) {
+      setTimeout(function () {
+        console.log(i); // 4个5
+      }, 1000);
+    }
+
+    for (var k = 1; k < 5; k++) {
+      (function (num) {
+        setTimeout(function () {
+          console.log(num); // 1 2 3 4
+        }, 1000);
+      }(k))
+    }
+
+    for (let n = 1; n < 5; n++) {
+      setTimeout(function () {
+        console.log(n); // 1 2 3 4
+      }, 1000);
+    }
+
+    console.log('***************************************************************');
+    /* *******************************模块****************************** */
+
+    function CoolModule() {
+      var something = "cool";
+      var another = [1, 2, 3];
+
+      function doSomething() {
+        console.log(something);
+      }
+
+      function doAnother() {
+        console.log(another.join(" ! "));
+      }
+
+      return {
+        doSomething: doSomething,
+        doAnother: doAnother
+      }
+    }
+
+    var foo = CoolModule();
+
+    foo.doSomething(); // cool
+    foo.doAnother(); // 1 ! 2 ! 3
+
+    // 使用IFEE实现单例模式
+    var foo = (function CoolModule() {
+      var something = "cool";
+      var another = [1, 2, 3];
+
+      function doSomething() {
+        console.log(something);
+      }
+
+      function doAnother() {
+        console.log(another.join(" ! "));
+      }
+
+      return {
+        doSomething: doSomething,
+        doAnother: doAnother
+      }
+    })();
+
+    foo.doSomething(); // cool
+    foo.doAnother(); // 1 ! 2 ! 3
+  </script>
+</body>
+
+</html>

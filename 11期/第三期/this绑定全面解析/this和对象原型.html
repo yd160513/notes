@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>this和对象原型</title>
+</head>
+
+<body>
+  <script>
+    /* 
+      一、关于this
+        1. this既不指向函数自身也不指向函数的词法作用域
+        2. this是在函数调用的时候绑定，它指向什么完全决定于函数在哪里被调用
+           this和词法作用域不一样，不能混合使用
+        3. 当一个函数被调用时会创建一个上下文，这个上下文里包含函数在哪里被调用（调用栈）、函数的调用方式、传入的参数、this
+     */
+    // 使用this，提供一种优雅的方式隐式“传递”一个对象引用。API设计更加简洁并且易于复用
+    // function identify() {
+    //   return this.name.toUpperCase();
+    // }
+    // function speak() {
+    //   var greeting = "Hello, I'm " + identify.call(this);
+    //   console.log(greeting);
+    // }
+    // var me = {
+    //   name: 'Kyle'
+    // }
+    // var you = {
+    //   name: 'Reader'
+    // }
+    // identify.call(me); // Kyle
+    // identify.call(you); // Reader
+
+    // speak.call(me); // Hello, I'm KYLE
+    // speak.call(you); // Hello, I'm READER
+    // -------------------词法作用域写法--------------------------------
+    // 词法作用域方案，显式传递上下文对象方式，会让代码变得越来越混乱
+    var me = {
+      name: "Kyle"
+    };
+
+    var you = {
+      name: "Reader"
+    };
+
+
+    function identify(context) {
+      return context.name.toUpperCase();
+    }
+
+    function speak(context) {
+      var greeting = "Hello, I'm " + identify(context);
+      console.log(greeting);
+    }
+    identify(you); // READER
+    speak(me); // Hello, I'm KYLE
+    /* 
+      二、this全面解析
+        1. 调用位置：
+          调用位置就是函数在代码中被调用的位置（而不是声明的位置）。
+          调用栈：分析调用栈：调用位置就是当前正在执行的函数的前一个调用中
+        2. 绑定规则：
+          1. 默认绑定：
+              独立函数调用，可以看做是无法应用其他规则时的默认规则，在严格模式下this指向undefined，在非严格模式下this指向全局对象
+              在严格模式下  调用函数 ，不会影响默认绑定
+     */
+    //  默认绑定：
+        // 严格模式下执行会this指向undefined
+        // function foo() {
+        //   // "use strict";
+        //   console.log(this.a); // Cannot read property 'name' of undefined
+        // }
+        // var a = 2;
+        // foo(); // this is undefined
+        // -----------
+        // 非严格模式下this指向全局对象
+          function foo() {
+            console.log(this.a);
+          }
+          var a = 2;
+          (function () {
+            "use strict"
+            foo(); // 2
+          })();
+
+// ************************************************************************
+          
+    /* 
+      隐式绑定：
+        当函数引用有上下文时，隐式绑定规则会把函数中的this绑定到这个上下文对象
+        对象属性引用链中只有上一层或者说最后一层在调用在调用中起作用
+        隐式丢失：
+          被隐式绑定的函数特定情况下会丢失绑定对象，应用默认绑定，把this绑定到全局对象或者undefined上
+     */
+    //当函数引用有上下文时，隐式绑定规则会把函数中的this绑定到这个上下文对象
+    function foo1() {
+      console.log(this.a);
+    }
+    var obj = {
+      a: 2,
+      foo1: foo1
+    };
+    obj.foo1(); // 2
+    
+    // --------------------
+
+    function foo2() {
+      console.log(this.a);
+    }
+    function doFoo(fn) {
+      // fn其实引用的是foo2
+
+      fn(); // 对象属性引用链中只有上一层或者说最后一层在调用中起作用,
+    }
+    var obj2 = {
+      a: 2,
+      foo2: foo2 // 对象属性引用链中只有上一层或者说最后一层在调用中起作用
+    };
+    var bar2 = obj2.foo2; //函数别名
+    var a = 'oops, global'; // a是全局对象的属性
+
+    doFoo(obj2.foo2); // oops, global
+
+    
+// ************************************************************************
+
+    /* 
+      显式绑定：
+        通过call()或者apply()方法，第一个参数是对象，在调用函数时将这个对象绑定到this。
+     */
+    function foo() {
+      console.log(this.a);
+    }
+    var obj = {
+      a: 2
+    };
+    foo.call(obj); // 2 调用foo时强制把foo的this绑定到obj上
+
+    // 显式绑定无法解决丢失绑定的问题
+    // 解决方案： 不去操作调用call的那个方法，而是在它外边包一个。去调用包着的这个
+    //  1. 硬绑定：创建函数bar(), 并在它的内部手动调用foo.call(obj)， 强制把foo的this绑定到obj
+    //  2. API调用的“上下文”
+    function foo() {
+      console.log('显示绑定解决丢失绑定' + this.a);
+    }
+    var obj = {
+      a: 2
+    }
+    var bar = function() {
+      foo.call(obj);
+    }
+    bar(); // 2
+    setTimeout(bar, 100); // 2
+    // 硬绑定应用场景：
+      // 创建一个包裹函数，负责接收参数并返回
+      function foo4(something) {
+        console.log(this.a, something);
+        return this.a + something;
+      }
+      var obj4 = {
+        a: 2
+      };
+      var bar4 = function () {
+        return foo4.apply(obj4, arguments);
+      }
+      var b = bar4(3); // 2 3
+      console.log(b); // 5
+      // ES5内置了Function.prototype.bind,bind会返回一个硬绑定的函数
+      function foo5(s) {
+        console.log(this.a, s);
+        return this.a + s;
+      }
+      var obj5 = {
+        a: 2
+      };
+      var bar5 = foo5.bind(obj);
+      var b5 = bar5(3); // 2 3
+      console.log(b5); // 5
+      
+      // API调用的“上下文”
+      /* 
+        js许多内置函数提供了一个可选参数，被称为‘context’（上下文）
+        其作用和bind()一样，确保回调函数使用指定的this。
+        这些函数实际上通过call()和apply()实现了显式绑定
+       */
+       function foo6(el) {
+          console.log( el, this.id );
+        }
+
+        var obj = {
+            id: "awesome"
+        }
+
+        // 调用foo(..)时把this绑定到obj
+        var arr = [1, 2, 3]
+        arr.forEach( foo6, obj );
+        // 1 awesome 2 awesome 3 awesome    
+
+// ************************************************************************
+
+  // new绑定：实际上并不存在所谓的构造函数，只有对于函数的构造调用
+  /* 
+    使用new来调用函数，会发生以下行为：
+        1. 创建一个新对象，
+        2. 这个新对象会被执行prototype链接（原型链）
+        3. 这个新对象会绑定到函数调用的this
+        4. 如果函数没有返回其他对象，那么new表达式中的函数会自动返回到这个新对象中
+   */
+  //  使用new来调用foo(..)时，会构造一个新对象并把它（bar）绑定到foo(..)调用中的this
+    function foo7(a) {
+      this.a = a;
+    }
+
+    var bar = new foo7(2); // bar和foo(..)调用中的this进行绑定
+    console.log( bar.a ); // 2
+
+// ************************************************************************
+
+  /* 
+    优先级：
+      1. new绑定
+      2. 显式绑定
+      3. 隐式绑定
+      4. 默认绑定
+    在new使用硬绑定函数的目的是预先设置函数的一些参数，这样在使用new进行初始化时就可以只传入其余的参数（柯里化）
+   */
+  function foo(p1, p2) {
+    this.val = p1 + p2;
+  }
+
+  // 之所以使用null是因为在本例中我们并不关心硬绑定的this是什么
+  // 反正使用new时this会被修改
+  var bar = foo.bind( null, "p1" );
+
+  var baz = new bar( "p2" );
+
+  baz.val; // p1p2
+
+// ************************************************************************
+  /* 
+    绑定例外：
+      1. 被忽略的this：把null或undefined作为this的绑定对象传入call、apply或者bind，这些值在调用时会被忽略掉，实际应用是默认规则
+        以下情况会传入null：
+          1. 使用apply来展开一个数组，并当做参数传入一个函数
+          2. bind可以对参数进行柯里化（预先设置一些参数）
+   */
+   function foo9(a, b) {
+     console.log(a + ',' + b);
+   }
+  //  把数组展开成参数
+  foo9.apply(null, [1, 2]); // 1, 2
+
+  // 使用bind进行柯里化
+  var bar9 = foo9.bind(null, 2);
+  bar9(3); // 2, 3
+  // 总是传入null会产生一些副作用，如果某个函数确实使用了this，那就会使用默认规则
+  // 安全的做法是传入一个由Object.created(null)创建的空对象，这样创建的里边不会有Object.prototype这个委托，比{}更空
+  /* 
+    绑定例外：
+      2. 间接引用：
+          间接引用下，调用这个函数会应用默认绑定规则。间接引用最容易在赋值时发生。
+   */
+   // p.foo = o.foo的返回值是目标函数的引用，所以调用位置是foo()而不是p.foo()或者o.foo()
+    function foo() {
+        console.log( this.a );
+    }
+
+    var a = 2;
+    var o = { a: 3, foo: foo };
+    var p = { a: 4};
+
+    o.foo(); // 3
+    (p.foo = o.foo)(); // 2
+
+// ************************************************************************
+
+    /* 
+      this词法
+        箭头函数：根据外层（函数或者全局）作用域（词法作用域）来决定this的。
+     */
+    // foo()内部创建的箭头函数会捕获调用时foo()的this。
+    // 由于foo()的this绑定到obj1，bar(引用箭头函数)的this也会绑定到obj1，箭头函数的绑定无法被修改(new也不行)。
+    function foo() {
+        // 返回一个箭头函数
+        return (a) => {
+            // this继承自foo()
+            console.log( this.a );
+        };
+    }
+
+    var obj1 = {
+        a: 2
+    };
+
+    var obj2 = {
+        a: 3
+    }
+
+    var bar = foo.call( obj1 );
+    bar.call( obj2 ); // 2，不是3！
+
+// ************************************************************************
+
+    /* 
+      对象：
+        1. 对象属性名永远是字符串
+        2. ES6规定对象属性名可以计算
+        3. 浅拷贝：ES6Object.assign（可枚举，自有键）
+        4. 深拷贝：JSON.parse( JSON.stringify( someObj ) )
+        存在性：
+          in：检查属性名（对应的数组就是索引）是否在对象及其原型链中
+          hasOwnProperty(): 只会检查属性名是否在对象中
+          for in: 遍历对象的可枚举属性，包括原型链
+          propertyIsEnumerable(): 只检查属性名是否在对象中并且enumerable:true
+          Object.keys(): 只查找属性名是否在对象中，返回一个数组，包含所有可枚举属性名。
+          Object.getOwnPropertyNames(..)：只查找属性名是否在对象中，返回一个数组，包含所有属性名，无论是否可枚举。
+        遍历：
+          forEach(..)遍历数组中的所有值并忽略回调函数的返回值。
+          every(..)一直运行直到回调函数返回false（或者“假”值），会提前终止遍历
+          some(..)一直运行直到回调函数返回true（或者“真”值），会提前终止遍历
+          for..of：直接遍历值
+     */
+  </script>
+</body>
+
+</html>
