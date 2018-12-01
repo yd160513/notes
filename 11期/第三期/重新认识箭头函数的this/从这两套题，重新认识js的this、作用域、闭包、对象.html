@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>从这两套题，重新认识js的this、作用域、闭包、对象</title>
+</head>
+<body>
+  <script>
+    /* 
+      js绑定规则：
+        1. new绑定
+        2. 显式绑定
+        3. 隐式绑定
+        4. 默认绑定（严格undefined/非严格全局对象）
+        5. 箭头函数绑定
+      总结：
+        this总是指向调用该函数的对象（箭头函数除外）
+      箭头函数总结：
+        1. 箭头函数不绑定this，箭头函数中的this相当于普通变量
+        2. 箭头函数的this寻值行为与普通变量相同，在作用域中逐级查找
+        3. 箭头函数的this无法通过bind、call、apply来直接修改（可间接修改）
+        4. 改变作用域中this的指向可以改变箭头函数中的this
+     */
+     /* 
+      第一题：
+      非严格模式
+      */
+      var name = 'window';
+      var person1 = {
+        name: 'person1',
+        show1: function() {
+          console.log(this.name);
+        },
+        show2: () => console.log(this.name),
+        show3: function() {
+          return function() {
+            console.log(this.name);
+          }
+        },
+        show4: function() {
+          return () => console.log(this.name);
+        }
+      };
+      var person2 = {
+        name: 'person2'
+      };
+      /* 
+      网上解释：
+        1. 箭头函数的this指向外层函数作用域中的this
+        2. 箭头函数的this是定义函数时所在上下文中的this，在全局函数中，this等于window
+        3. 箭头函数体内的this对象，就是定义时所在的对象，而不是使用时所在的对象
+       */
+      person1.show1(); // person1
+      person1.show1.call(person2); // person2
+      person1.show2(); // window
+      /* 
+      没有new绑定，然后到显式绑定，然后发现还有箭头函数绑定，箭头函数中的this就跟随外层作用域，没有外层函数，所以指向了全局对象
+      */
+      person1.show2.call(person2); // window  
+      person1.show3()(); // window // var func = person3.show()  func()
+      person1.show3().call(person2); // person2 // 通过person2调用最终的打印方法
+      person1.show3.call(person2)(); // window // 先通过person2调用person1的高阶函数，再在全局环境中执行打印方法
+      person1.show4()(); // window  正确答案：person1
+      person1.show4().call(person2); // person1
+
+      person1.show4.call(person2)(); // window 正确答案：person2
+      // 通过上边这个总结：
+      // 谁调用箭头函数的外层function，箭头函数的this就指向该对象，如果箭头函数没有外层函数，则指向window
+      console.log('-');
+      person1.show4.call(person1)(); // 等于person1.show4()() // person1
+
+      console.log('------------------Question 2----------------------');
+      // ----------------------------Question 2-------------------------
+
+  </script>
+</body>
+</html>

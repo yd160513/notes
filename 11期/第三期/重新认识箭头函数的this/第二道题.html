@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Question 2</title>
+</head>
+<body>
+  <script>
+    // 通过构造函数来创建一个对象，并执行相同的4个show方法
+    var name = 'window';
+    function Person(name) {
+      this.name = name;
+      this.show1 = function() {
+        console.log(this.name);
+      };
+      this.show2 = () => console.log(this.name);
+      this.show3 = function() {
+        return function() {
+          console.log(this.name);
+        }
+      };
+      this.show4 = function() {
+        return () => console.log(this.name);
+      }
+    }
+    // 这里的personA就是一个对象和第一道题中的person1一样
+    // 构造函数多了一个函数作用域
+    // A.call(B) 调用A时把A的this绑定到B上
+    // new绑定的优先级是最高的，那么即使后边再由任何绑定也更改不了new
+    var personA = new Person('personA');
+    var personB = new Person('personB');
+    personA.show1(); // personA 隐式绑定：personA调用show1
+    personA.show1.call(personB); // personB 显式绑定：personB调用personB
+    personA.show2(); // personA personA是new绑定，创建了构造函数作用域，this指向外部函数作用域，指向personA
+    personA.show2.call(personB); // personA personA是new绑定，创建了构造函数作用域，this指向外部函数作用域，指向personA，然后用call改变不了new的作用域，所有还是personA
+    personA.show3()(); // window 默认绑定：先是personA调用show3，然后在去全局中调用show3返回的函数，所以是window
+    personA.show3().call(personB); // personB 显式绑定：personA调用show3()，再由personB调用show3返回的函数
+    personA.show3.call(personB)(); // window 默认绑定：personA调用show3的时候把personA的this绑定到personB，show3返回的函数还是由window调用的
+    personA.show4()(); // personA 箭头函数绑定：箭头函数的this由外层函数作用域或全局对象决定，这个外层是一个普通函数，它由personA调用，所以箭头函数的this也指向personA
+    personA.show4().call(personB); // personA 箭头函数绑定：show4里的箭头函数是根据show4在哪里被调用决定的，所以指向personA
+    personA.show4.call(personB)(); // window 正确答案：personB 这是是由personA的this指向了personB，相当于personB调用的show4，箭头函数的this指向外层函数所以是personB
+  </script>
+</body>
+</html>
