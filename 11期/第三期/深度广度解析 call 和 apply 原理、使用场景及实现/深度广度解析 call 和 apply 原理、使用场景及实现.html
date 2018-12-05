@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>深度广度解析 call 和 apply 原理、使用场景及实现</title>
+</head>
+
+<body>
+  <script>
+    /* 
+      call()接收参数列表、apply()接收参数数组
+     */
+    /****************************************使用场景1、合并两个数组**********************************************/
+    //  合并两个数组
+    let arr1 = ['parsnip', 'potato'];
+    let arr2 = ['celery', 'beetroot'];
+    console.log(Array.prototype.push.apply(arr1, arr2)); // 4
+    console.log(arr1); // ["parsnip", "potato", "celery", "beetroot"]
+    // 使用apply合并数组的弊端是参数数组不能过长，因为一个函数能够接收的参数个数是有限制的，
+    // 不同的引擎限制不一样js限制在65535，有些报异常，有些不报异常但是会丢失多余参数
+    // 解决办法：将参数切块后传入目标方法
+    function concatOfArray(arr1, arr2) { // 个人理解：先给一个固定值，然后用数组的长度去判断超过这个值没有，如果超过就先截取这个固定值的个数，然后在这个基础上再次遍历在比较再截取。
+      var QUANTUM = 32768;
+      for (var i = 0, len = arr2.length; i < len; i += QUANTUM) {
+        Array.prototype.push.apply(
+          arr1,
+          arr2.slice(i, Math.min(i + QUANTUM, len)) // 如果QUANTUM小说明还有剩余的，上边的i+QUANTUM之后再次进行截取取值
+        );
+      }
+      return arr1;
+    }
+    // let arr3 = [1, 2, 3, 4, 5];
+    // let arr4 = [6, 7, 8];
+    let arr3 = [-1, -2, -3];
+    let arr4 = [];
+    for (var i = 0; i < 1000000; i++) {
+      arr4.push(i);
+    }
+    // Array.prototype.push.apply(arr3, arr4); // Uncaught RangeError: Maximum call stack size exceeded
+    concatOfArray(arr3, arr4);
+
+    /****************************************使用场景2、获取数组中的最大值和最小值**********************************************/
+    // 数组本身没有Max方法，所以借用Math的
+    let numbers = [1, 2, 3, 4, 5];
+    console.log(Math.min.apply(Math, numbers)); // 1 这里传入的是一个数组
+    console.log(Math.max.call(Math, ...numbers)); // 5 这里传入的是用...传入的数组的每一项 1, 2, 3, 4, 5
+
+    /****************************************使用场景3、验证是否是数组**********************************************/
+    // 可以通过toString来获取对象的类型，但是每个对象的toString不一样，所以通过Object.prototype.toString()来实现
+    var arr = [1, 2, 3, 4];
+    function isArray(obj) {
+      return Object.prototype.toString.call(obj) === '[object Array]';
+      // console.log(Object.prototype.toString.apply(obj)); // [object Array]
+    }
+    var res = isArray(arr);
+    console.log(res); // true
+
+    /****************************************使用场景4、类数组使用数组方法**********************************************/
+    // 类数组只有length和索引、不具有数组的方法。
+    var domNodes = document.getElementsByTagName('*');
+    console.log(domNodes);
+    // domNodes.unshift('html');
+    var domNodeArrays = Array.prototype.slice.call(domNodes);
+    domNodeArrays.unshift('h1');
+    console.log(domNodeArrays); // 在原来的基础上前边多了一个h1
+    // 上边的代码可以写成下边这样：
+    var domNodes1 = [].slice.call(domNodes); // 让类数组使用数组的方法
+    domNodes1.unshift('h2');
+    console.log(domNodes1);
+    // ES6方法：
+    var domNodes2 = Array.from(domNodes);
+    domNodes2.unshift('h3');
+    console.log(domNodes2);
+    // -----------为什么slice能够转成数组，源码：-----------------------
+    Array.prototype.slice = function (begin, end) {
+      end = (typeof end !== 'undefined') ? end : this.length;
+
+      // For array like object we handle it ourselves.
+      var i, cloned = [],
+        size, len = this.length;
+
+      // Handle negative value for "begin"
+      var start = begin || 0;
+      start = (start >= 0) ? start : Math.max(0, len + start);
+
+      // Handle negative value for "end"
+      var upTo = (typeof end == 'number') ? Math.min(end, len) : len;
+      if (end < 0) {
+        upTo = len + end;
+      }
+
+      // Actual expected size of the slice
+      size = upTo - start;
+
+      if (size > 0) {
+        cloned = new Array(size);
+        if (this.charAt) {
+          for (i = 0; i < size; i++) {
+            cloned[i] = this.charAt(start + i);
+          }
+        } else {
+          for (i = 0; i < size; i++) {
+            cloned[i] = this[start + i];
+          }
+        }
+      }
+
+      return cloned; // 返回的是一个新数组
+    };
+
+    // -----------低版本IE不兼容以上写法（IE < 9）-------------------------------
+    function toArray(nodes) {
+      try {
+        Array.prototype.slice.apply(nodes);
+      } catch (e) {
+        var arr = [];
+        for (var i = 0, len = nodes.length; i < len; i++) {
+          arr[i] = nodes[i];
+        }
+        return arr;
+      }
+    }
+
+    // -----------为什么要有类数组，（是为了解决什么问题而出现的）：可以更快的操作复杂数据-------------------------------
+    /* 
+      JavaScript类型化数组是一种类似数组的对象，并提供了一种用于访问原始二进制数据的机制。 
+      Array存储的对象能动态增多和减少，并且可以存储任何JavaScript值。
+      JavaScript引擎会做一些内部优化，以便对数组的操作可以很快。
+      然而，随着Web应用程序变得越来越强大，尤其一些新增加的功能例如：音频视频编辑，访问WebSockets的原始数据等，
+      很明显有些时候如果使用JavaScript代码可以快速方便地通过类型化数组来操作原始的二进制数据，这将会非常有帮助。
+    */
+
+    /****************************************使用场景5、调用父构造函数实现继承**********************************************/
+    // 在子构造函数中调用call方法来实现继承，
+    // 缺点：1. 只能继承父类的实例属性和方法，原型属性和方法继承不了
+    //      2.  无法实现复用，每个子类都有父类实例函数副本，影响性能
+    function SuperType() {
+      this.color = ['red', 'pink'];
+    }
+    function Subtype() {
+      SuperType.call(this);
+    }
+    var child = new Subtype();
+    child.color.push('black');
+    console.log(child.color);
+    var child1 = new Subtype();
+    child1.color.push('blue');
+    console.log(child1.color);
+    var par = new Subtype();
+    console.log(par.color);
+
+    /****************************************模拟call、apply**********************************************/
+    /* 
+      call主要两步：
+        1. call改变了this的指向
+        2. 执行了调用call的函数
+    */
+    var foo = {
+      value: 1
+    };
+    function bar() {
+      console.log(this.value);
+    }
+    bar(); // undefined
+    bar.call(foo); // 1
+
+    // 改变指向：
+    var obj = {
+      value: 1,
+      // 放到这里边就改变了指向
+      fn: function () {
+        console.log(this.value);
+      }
+    };
+    // 虽然改变了指向，但是在对象中创建了一个属性，所以在执行完之后需要用delete删除 delete obj.fn
+    // 根据以上思路写出第一版：
+    //  -----------第一版------------
+    // Function.prototype.call2 = function (context) {
+    //   // 获取调用call2的函数
+    //   context.fn = this; // 1. 将函数设置为对象的属性
+    //   context.fn(); // 2. 执行函数
+    //   delete context.fn; // 3. 删除函数
+    // }
+    // var foo = {
+    //   value: 2
+    // };
+    // function bar() {
+    //   console.log(this.value);
+    // }
+    // bar.call2(foo); // 2
+    //  -----------第二版------------
+    // call()是可以接收参数的
+    // Function.prototype.call2 = function (context) {
+    //   // 1. 获取到调用call2的对象
+    //   context.fn = this;
+    //   // 1.1 设置参数
+    //   var arg = [];
+    //   // 从第二个开始循环，因为第一个是this
+    //   for (var i = 1; i < arguments.length; i++) {
+    //     arg.push('arguments[' + i + ']'); // 数组的索引是字符串
+    //   }
+    //   // 2. 执行函数
+    //   eval('context.fn('+ arg +')'); // 可以用ES6语法，但是call是ES3的，所以不建议用ES6的
+    //   // 3. 删除函数
+    //   delete context.fn;
+    // }
+    // var foon = {
+    //   value: 1
+    // };
+    // function barn(name) {
+    //   console.log(name);
+    //   console.log(this.value);
+    // }
+    // barn.call2(foon, 'kou');
+    
+    //  -----------第三版------------
+    // 1. this参数可以指向null，2. 函数是有返回值的
+    Function.prototype.call2 = function (context) {
+      // 1. 获取到调用call2的对象
+      var context = context || this;
+      context.fn = this;
+      // 1.1 设置参数
+      var arg = [];
+      // 从第二个开始循环，因为第一个是this
+      for (var i = 1; i < arguments.length; i++) {
+        arg.push('arguments[' + i + ']'); // 数组的索引是字符串
+      }
+      // 2. 执行函数
+      var result = eval('context.fn('+ arg +')'); // 可以用ES6语法，但是call是ES3的，所以不建议用ES6的
+      // 3. 删除函数
+      delete context.fn;
+      return result;
+    }
+    var value = 3;
+    var foon = {
+      value: 1
+    };
+    function barn(name, age) {
+      console.log(this.value);
+      return {
+        value: this.value,
+        name: name,
+        age: age
+      }
+    }
+    barn.call(null); // 3
+    barn.call(foon, 'kou', 18);
+
+    /* 
+      将函数指向给一个对象
+      执行这个函数
+      删除这个对象中的这个函数的属性
+      可以接收其他参数
+      第一个参数可以传入null就指向window
+      可以接收返回值
+    */
+  </script>
+</body>
+
+</html>

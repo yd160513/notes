@@ -1,27 +1,29 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>Question 2</title>
 </head>
+
 <body>
   <script>
     // 通过构造函数来创建一个对象，并执行相同的4个show方法
     var name = 'window';
     function Person(name) {
       this.name = name;
-      this.show1 = function() {
+      this.show1 = function () {
         console.log(this.name);
       };
       this.show2 = () => console.log(this.name);
-      this.show3 = function() {
-        return function() {
+      this.show3 = function () {
+        return function () {
           console.log(this.name);
         }
       };
-      this.show4 = function() {
+      this.show4 = function () {
         return () => console.log(this.name);
       }
     }
@@ -41,6 +43,20 @@
     personA.show4()(); // personA 箭头函数绑定：箭头函数的this由外层函数作用域或全局对象决定，这个外层是一个普通函数，它由personA调用，所以箭头函数的this也指向personA
     personA.show4().call(personB); // personA 箭头函数绑定：show4里的箭头函数是根据show4在哪里被调用决定的，所以指向personA
     personA.show4.call(personB)(); // window 正确答案：personB 这是是由personA的this指向了personB，相当于personB调用的show4，箭头函数的this指向外层函数所以是personB
+
+    console.log('-------------');
+    var obj = {
+      say: function () {
+        function _say() {
+          console.log(this);
+        }
+        console.log(obj);
+        return _say.bind(obj);
+      }()
+    }
+    debugger
+    obj.say()
   </script>
 </body>
+
 </html>
