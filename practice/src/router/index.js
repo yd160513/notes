@@ -7,6 +7,8 @@ import ChangeColor from '@/view/computedChangeColor'
 import DepthSelector from '@/view/depthSelector'
 import roleTestPage from '@/view/roleTestPage'
 import Layout from '@/view/Layout'
+import Wel from '@/view/wel'
+import Tree from '@/view/tree'
 
 Vue.use(Router)
 
@@ -17,14 +19,14 @@ export const constantRouterMap = [
     component: Login
   },
   {
-    path: '/',
-    redirect: 'layout',
+    path: '',
     component: Layout, // 重定向  // 首页
+    redirect: 'Wel',
     children: [{
-      path: 'layout',
-      component: Layout,
-      name: 'layout',
-      meta: { title: 'layout', noCache: true } // noCache: 页面不会被缓存，默认false
+      path: 'Wel',
+      component: Wel,
+      name: 'Wel',
+      meta: { title: 'Wel', noCache: true } // noCache: 页面不会被缓存，默认false
     },
     {
       path: '/countDown',
@@ -40,6 +42,11 @@ export const constantRouterMap = [
       path: '/depthSelector',
       name: 'depthSelector',
       component: DepthSelector
+    },
+    {
+      path: '/tree',
+      name: 'tree',
+      component: Tree
     }]
   }
 ];

@@ -11,7 +11,7 @@
 </template>
 <script>
 import { mapGetters } from 'vuex'
-import SidebarItem from "./sidebarItem";
+import SidebarItem from "./sidebarItem"
 
 export default {
   components: {
@@ -42,6 +42,11 @@ export default {
           id: '3',
           name: "深度选择器",
           path: "/depthSelector"
+        },
+        {
+          id: '4',
+          name: "json转tree",
+          path: "/tree"
         }
       ]
     };

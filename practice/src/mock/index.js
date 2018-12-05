@@ -3,6 +3,8 @@ import loginAPI from './login'
 import articleAPI from './article'
 import remoteSearchAPI from './remoteSearch'
 import transactionAPI from './transaction'
+import treeAPI from './tree'
+
 
 // Mock.setup({
 //   timeout: '350-600'
@@ -25,5 +27,8 @@ Mock.mock(/\/search\/user/, 'get', remoteSearchAPI.searchUser)
 
 // 账单相关
 Mock.mock(/\/transaction\/list/, 'get', transactionAPI.getList)
+
+// tree
+Mock.mock(/\/user\/tree\.*/, 'get', treeAPI.getList)
 
 export default Mock
