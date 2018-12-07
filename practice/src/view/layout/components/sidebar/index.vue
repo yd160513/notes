@@ -28,30 +28,50 @@ export default {
   data() {
     return {
       permission_routers: [
-        {
-          id: '1',
-          name: "验证码倒计时",
-          path: "/countDown"
-        },
-        {
-          id: '2',
-          name: "计算属性切换颜色",
-          path: "/changeColor"
-        },
-        {
-          id: '3',
-          name: "深度选择器",
-          path: "/depthSelector"
-        },
-        {
-          id: '4',
-          name: "json转tree",
-          path: "/tree"
-        }
+        // {
+        //   id: '1',
+        //   name: "验证码倒计时",
+        //   path: "/countDown"
+        // },
+        // {
+        //   id: '2',
+        //   name: "计算属性切换颜色",
+        //   path: "/changeColor"
+        // },
+        // {
+        //   id: '3',
+        //   name: "深度选择器",
+        //   path: "/depthSelector"
+        // },
+        // {
+        //   id: '4',
+        //   name: "json转tree",
+        //   path: "/tree"
+        // }
       ]
     };
   },
+  created() {
+    this.addPath();
+  },
   methods: {
+    addPath() {
+      const obj = {
+        '验证码倒计时': '/countDown', 
+        '计算属性切换颜色': '/changeColor', 
+        '深度选择器': '/depthSelector', 
+        'json转tree': '/tree',
+        '动态渲染checkbox和input': '/dynamicRender'
+      };
+      const id = '0';
+      for (let [key, value] of Object.entries(obj)) {
+        const objTemp = {
+          name: key,
+          path: value
+        };
+        this.permission_routers.push(objTemp);
+      }
+    },
     changePage(path) {
       this.$router.push({
         path

@@ -9,6 +9,7 @@ import roleTestPage from '@/view/roleTestPage'
 import Layout from '@/view/Layout'
 import Wel from '@/view/wel'
 import Tree from '@/view/tree'
+import DynamicRender from '@/view/dynamicRender'
 
 Vue.use(Router)
 
@@ -47,6 +48,11 @@ export const constantRouterMap = [
       path: '/tree',
       name: 'tree',
       component: Tree
+    },
+    {
+      path: '/dynamicRender',
+      name: 'dynamicRender',
+      component: DynamicRender
     }]
   }
 ];
