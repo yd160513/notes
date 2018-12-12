@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>深度解析bind原理、使用场景及模拟实现</title>
+</head>
+
+<body>
+  <script>
+
+    // bind()和call/apply最大的不同就是前者返回一个绑定上下文的函数，而后者则是直接执行了函数
+    var value = 2;
+    var foo = {
+      value: 1
+    };
+
+    function bar(name, age) {
+      return {
+        value: this.value,
+        name: this.name,
+        age: this.age
+      }
+    }
+
+    // 直接执行函数
+    bar.call(foo, 'Jack', 20); // {value: 1, name: "Jack", age: 20}
+
+    // 返回一个函数
+    var bindFoo1 = bar.bind(foo, 'Jack', 20);
+    bindFoo1(); // {value: 1, name: "Jack", age: 20}
+
+    /* 
+      bind特性：
+        1. 可以指定this
+        2. 可以返回函数
+        3. 可以传参
+        4. 柯里化
+     */
+
+    /* *******************************业务场景********************************** */
+
+    var nickname = "Kitty";
+    function Person(name) {
+      this.nickname = name;
+      this.distractedGreeting = function () {
+
+        // 如果想输出到函数内部的，第一种解决方案就是缓存this值，在这里var self = this,然后下边的this变成self
+
+        // 第二种解决方案使用bind传入this
+        // setTimeout(function () {
+        //   console.log("Hello, my name is " + this.nickname);
+        // }.bind(this), 500); 
+        setTimeout(function () {
+          console.log("Hello, my name is " + this.nickname);
+        }, 500);
+      }
+    }
+
+    var person = new Person('jawil');
+    person.distractedGreeting();  // 这里打印的是kitty，因为setTimeout在全局环境中执行
+
+
+    /* *******************************柯里化********************************** */
+
+    // 只传递给函数一部分参数来调用它，让它返回一个函数去处理剩下的参数
+
+    // 可以一次性调用柯里化函数，也可以每次只传递一个参数分多次调用
+    var add = function (x) {
+      return function (y) { // 通过闭包的方式记住第一个参数
+        return x + y;
+      }
+    }
+
+    var increment = add(1);
+
+    var addTen = add(10);
+
+    increment(2); // 3
+
+    addTen(2); // 12
+
+    add(1)(2); // 3
+
+
+    /* *******************************模拟实现********************************** */
+
+    // bind()在ES5才被加入，所以有的浏览器不支持，IE8以下不支持
+
+    /* 
+      四个特性：
+        1. 指定this
+        2. 返回函数
+        3. 可以传参
+        4. 柯里化
+     */
+    //  1. 使用call/apply来实现第一点---指定this
+    //  2. return返回一个函数
+    Function.prototype.bind2 = function (context) {
+      var self = this;
+      return function () { // 实现第二点
+        return self.apply(context); // 实现第一点
+      }
+    }
+    //  3. 使用arguments获取参数数组截取除了第一个以后的所有参数作为apply的第二个参数 ---- 传参
+    Function.prototype.bind2 = function (context) {
+      var self = this;
+      var args = Array.prototype.slice.call(arguments, 1); // 这里获取的是第一次调用bind时除了第一个之后的所有的参数
+      return function () {
+        var bindArgs = Array.prototype.slice.call(arguments); // 这里获取的是bind返回的函数传入的参数
+        return self.apply(context, args.concat(bindArgs)); // 将所有的参数合并成一个数组----柯里化
+      }
+    }
+
+    // 1、赋值语句是右执行的,此时会先执行右侧的对象
+    var obj = {
+      // 2、say 是立即执行函数
+      say: function () {
+        function _say() {
+          // 5、输出 window
+          console.log(this);
+        }
+        // 3、编译阶段 obj 赋值为 undefined
+        console.log(obj);
+        // 4、obj是 undefined，bind 本身是 call实现，
+        // call 接收 undefined 会绑定到 window。
+        return _say.bind(obj);
+      }(),
+    };
+    obj.say();
+
+
+  </script>
+</body>
+
+</html>
