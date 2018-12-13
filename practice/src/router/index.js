@@ -10,6 +10,10 @@ import Layout from '@/view/Layout'
 import Wel from '@/view/wel'
 import Tree from '@/view/tree'
 import DynamicRender from '@/view/dynamicRender'
+import KeepAliveA from '@/view/keepAlive/a'
+import KeepAliveB from '@/view/keepAlive/b'
+import KeepAliveC from '@/view/keepAlive/c'
+
 
 Vue.use(Router)
 
@@ -53,6 +57,27 @@ export const constantRouterMap = [
       path: '/dynamicRender',
       name: 'dynamicRender',
       component: DynamicRender
+    },
+    {
+      path: '/keepAliveA',
+      name: 'keepAliveA',
+      component: KeepAliveA,
+      meta: {
+        keepAlive: true,
+      }
+    },
+    {
+      path: '/KeepAliveB',
+      name: 'KeepAliveB',
+      component: KeepAliveB,
+      meta: {
+        keepAlive: false,
+      }
+    },
+    {
+      path: '/KeepAliveC',
+      name: 'KeepAliveC',
+      component: KeepAliveC
     }]
   }
 ];

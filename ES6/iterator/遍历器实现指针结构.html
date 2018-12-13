@@ -16,7 +16,7 @@
     Obj.prototype[Symbol.iterator] = function() {
       var iterator = { next: next };
       var current = this;
-      debugger
+      
       function next() {
         if (current) {
           var value = current.value;

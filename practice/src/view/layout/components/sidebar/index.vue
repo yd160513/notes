@@ -61,7 +61,8 @@ export default {
         '计算属性切换颜色': '/changeColor', 
         '深度选择器': '/depthSelector', 
         'json转tree': '/tree',
-        '动态渲染checkbox和input': '/dynamicRender'
+        '动态渲染checkbox和input': '/dynamicRender',
+        'keepAlive': '/keepAliveA',
       };
       const id = '0';
       for (let [key, value] of Object.entries(obj)) {

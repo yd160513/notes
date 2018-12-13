@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>深度解析 new 原理及模拟实现</title>
+</head>
+
+<body>
+  <script>
+    /*
+      定义：
+        new运算符创建一个用户定义的对象类型的实例或具有构造函数内置对象的实例
+    */
+    //  栗子：
+    function Car(color) {
+      this.color = color;
+    }
+    Car.prototype.start = function () {
+      console.log(this.color + 'car start');
+    }
+    var car = new Car('black');
+    car.color; // black 访问构造函数里的属性
+    car.start(); // black car start 访问原型里的属性
+    /* 
+      可以看出new创建的实例有2个特性：
+        1. 访问到构造函数里的属性
+        2. 访问到原型里的属性
+      注意：
+        symbol不可以使用new，因为symbol是基本数据类型，Symbol()返回的值都是唯一的
+    */
+    /* 
+      执行new时会发生以下事情：
+        1. 一个继承原型的新对象被创建
+        2. 将构造函数的作用域赋给新对象，使用指定的参数调用构造函数 Foo，
+           并将this绑定到新创建的对象  // new Foo(指定的参数) // new Foo === 没有指定参数
+        3. 执行构造函数中的代码，为新对象添加属性
+        4. 如果没有显式的返回一个对象，则返回这个新对象
+    */
+    // 模拟实现第一步
+    // 1. new是关键字不可以直接覆盖，可以用create来模拟实现new的效果
+    function created() {
+      // 创建一个新对象
+      var obj = new Object();
+      // 获得构造函数，arguments中去除第一个参数
+      Con = [].shift.call(arguments);
+      // 链接到原型，obj可以访问到构造函数原型中的属性
+      obj.__proto__ = Con.prototype;
+      // 绑定this实现继承，obj可以访问到构造函数中的属性
+      Con.apply(obj, arguments);
+      // 返回对象
+      return obj;
+    }
+
+    /* 
+      构造函数返回值：
+        1. 返回一个对象
+        2. 没有return，返回undefined
+        3. 返回undefined以外的基本类型
+      所以需要判断下返回值是不是一个对象，如果是对象那个则返回这个对象，不然返回新创建的obj对象
+    */
+    // 模拟实现第二部
+    function created() {
+      // 创建一个新对象
+      var obj = new Object();
+      // 获得构造函数，arguments中去除第一个参数
+      Con = [].shift.call(arguments);
+      // 链接到原型，obj可以访问到构造函数原型中的属性
+      obj.__proto__ = Con.prototype;
+      // 绑定this实现继承，obj可以访问到构造函数中的属性
+      var ret = Con.apply(obj, arguments);
+      // 优先返回构造函数返回的对象
+      return typeof ret === 'object' ? ret : obj;
+    }
+
+    
+
+
+  </script>
+</body>
+
+</html>
