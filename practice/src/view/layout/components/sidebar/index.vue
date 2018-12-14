@@ -63,6 +63,7 @@ export default {
         'json转tree': '/tree',
         '动态渲染checkbox和input': '/dynamicRender',
         'keepAlive': '/keepAliveA',
+        'RadioCheckbox': '/RadioCheckbox'
       };
       const id = '0';
       for (let [key, value] of Object.entries(obj)) {

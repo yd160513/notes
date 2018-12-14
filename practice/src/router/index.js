@@ -13,6 +13,7 @@ import DynamicRender from '@/view/dynamicRender'
 import KeepAliveA from '@/view/keepAlive/a'
 import KeepAliveB from '@/view/keepAlive/b'
 import KeepAliveC from '@/view/keepAlive/c'
+import RadioCheckbox from '@/view/radioCheckbox'
 
 
 Vue.use(Router)
@@ -78,6 +79,11 @@ export const constantRouterMap = [
       path: '/KeepAliveC',
       name: 'KeepAliveC',
       component: KeepAliveC
+    },
+    {
+      path: '/RadioCheckbox',
+      name: 'RadioCheckbox',
+      component: RadioCheckbox
     }]
   }
 ];
