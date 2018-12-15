@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>箭头函数</title>
+</head>
+
+<body>
+  <script>
+    /* 
+      箭头函数的作用：
+        1. 缩减代码
+        2. 改变this指向
+    */
+   /* ********************缩减代码************************ */
+    //  ES5
+    const double1 = function (number) {
+      return number * 2;
+    }
+    //  ES6
+    const double2 = (number) => number * 2;
+    //  ES6
+    const double2 = (number) => {
+      return number * 2;
+    }
+    //  多个参数时要加括号，单个可以不加
+    // 如果箭头函数的代码块部分多于一条语句，就要使用大括号括起来，并return返回
+    const double = (number, number2) => {
+      const sum = number + number2;
+      return sum;
+    }
+    // 由于大括号被解释为代码块，所以如果箭头函数直接返回一个对象，
+    // 必须在对象外面加上一个括号，否则会报错
+    // 报错
+    // let getTempItem = id => {id: id, name: 'Temp'}
+    // 成功
+    let getTempItem = id => ({ id, name: 'temp' })
+    // 简化回调函数
+    // 正常函数写法
+    [1, 2, 3].map(function (x) {
+      return x * x;
+    });
+    // 箭头函数写法
+    [1, 2, 3].map(x => x * x);//[1, 4, 9]
+
+   /* ********************this指向************************ */
+  //  普通this取决于谁调用就指向谁。可以用self暂存this，bind(this)
+  //  箭头函数中的this取决于外部函数的指向
+  /* 
+    注意点：
+      1. 函数体内的this对象，就是定义时所在的对象，而不是使用时所在的对象。
+      2. 不可以当做构造函数，不可以使用new命令
+      3. 不可以使用arguments对象，该对象不存在函数体内，如果要用可以用rest参数代替
+      4. 不可以使用yield命令，因此箭头函数不能用作generator函数
+  */
+
+  </script>
+</body>
+
+</html>

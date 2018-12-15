@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>rest参数</title>
+</head>
+
+<body>
+  <script>
+    /* 
+      ES6引入rest参数(...变量名),用于获取函数的多余参数，这样就不需要arguments对象了
+      rest参数搭配的变量是一个数组，将多余的参数放入数组中
+    */
+  //  reduce()
+  //  第一个参数：用于执行每个数组元素的函数（必须）
+  //  第二个参数：传递给函数的初始值(可选)
+    function addNumbers(...numbers) {
+      return numbers.reduce((sum, number) => {
+        return sum + number
+      }, 0);
+    }
+    console.log(addNumbers(1, 2, 4, 5)); // 12
+    // 也可以与结构赋值组合使用
+    var array = [1, 2,3, 5];
+    var [a, b, ...c] = array;
+    console.log(a); // 1
+    console.log(b); // 2
+    console.log(c); // [3, 5]
+    /* 
+      注意：
+        1. 每个函数最多只能声明一rest参数，而且rest参数必须是最后一个参数，否则报错
+        2. rest参数不能用于对象字面量setter中
+    */
+  </script>
+</body>
+
+</html>

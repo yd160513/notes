@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>块级作用域</title>
+</head>
+
+<body>
+  <script>
+    /* 
+      ES5只有全局作用域和函数作用域，我们必须要将代码包在函数内来限制作用域，这样就会有问题：
+    */
+    // 1. 内部变量覆盖外层变量
+    var tmp = new Date();
+    function f() {
+      console.log(tmp); // undefined
+      var tmp = 'hello world'
+    }
+    f();
+    // 变量泄露，成为全局变量
+    var s = 'hello';
+    for (var i = 0; i < s.length; i++) {
+      console.log(s[i]);
+    }
+    console.log(i); // 5
+
+    /* 
+      ES6提供了let和const来声明变量
+        1. 不需要立即执行的函数表达式（IIFE）
+        2. 循环体中的闭包不在有问题，可以直接用let声明i
+        3. 防止重复声明变量，let和const会产生暂时性死区
+    */
+  </script>
+</body>
+
+</html>

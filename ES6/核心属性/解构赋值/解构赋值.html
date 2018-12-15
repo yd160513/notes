@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>解构赋值-更方便的数据访问</title>
+</head>
+
+<body>
+  <script>
+    // 解构的用处：
+    // 对象取值：
+    // 原始：
+    var expense = {
+      type: "es6",
+      amount: "45"
+    };
+    var type = expense.type;
+    var amount = expense.amount;
+    console.log(type, amount);
+    // ES6
+    var expense1 = {
+      type1: "es6",
+      amount1: "45"
+    };
+    const { type1, amount1 } = expense1;
+    console.log(type1, amount1);
+
+    // 分配不同的值：
+    let node = { type: 1, name: 2 };
+    type = '2', name = 3;
+
+    // 这里必须加圆括号，否则花括号会被解析为代码块语句，
+    // 而快语句不允许在赋值操作符左侧出现。括起来之后被解析为表达式
+    ({ type, name } = node)
+    console.log(type);
+    console.log(name);
+
+    // 默认值
+    // 可以选择性的定义一个默认值，以便在指定属性不存在时使用该值。
+    let node2 = {
+      type2: '123',
+      name2: 'foo'
+    };
+    // 这里的value = true就是默认为true
+    let { type2, name2, value = true } = node2;
+
+    // 嵌套对象的解构
+    let node3 = {
+      type: 'identifier',
+      name: 'foo',
+      loc: {
+        start: {
+          line: 1
+        },
+        end: {
+          line: 4
+        }
+      }
+    };
+    let { loc: { start } } = node3;
+    console.log(start.line); // 1
+
+    // 必须传值的解构参数
+    function setCookie(name, value, {
+      secure,
+      path
+    }) {
+      // 具体代码
+    }
+    // setCookie('type', 'js') // 这里会报错，因为解构参数必须传值
+    // 上边的错误可以给后边的解构参数传一个默认值
+    function setCookie(name, value, {
+      secure,
+      path
+    } = {}) {
+      // 具体代码
+    }
+    setCookie('type', 'js') // 不会报错
+
+    // 数组
+    const names = ["Henry", "Bucky", "Emily"];
+    const [a, b, c] = names;
+    console.log(a); // Henry
+    console.log(b); // Bucky
+    console.log(c); // Emily
+    const [k, ...rest] = names; // 结合展开运算符
+    console.log(rest); // ["Bucky", "Emily"]
+    // 用解构返回数组个数
+    const { length } = names;
+    console.log(length); // 3
+    // 数据解构也可以用于赋值上下文，但不需要用小括号包裹表达式，这一点和对象解构不同
+    let colors = ["red", "green", "blue"],
+      firstColor = "black",
+      secondColor = "purple";
+    [firstColor, secondColor] = colors;
+    console.log(firstColor); //    "red"
+    console.log(secondColor);    // "green"
+    // 数组解构同样允许在数组任意位置指定默认值
+    // ES6克隆数组
+    let colors2 = ["red", "green", "blue"];
+    let [...clonedColors] = colors2;
+    console.log(clonedColors); //[red,green,blue]
+    // 将数组转化为对象
+    const points = [
+      [1, 2],
+      [3, 4],
+      [5, 6]
+    ];
+    //期望得到的数据格式如下，如何实现？
+    // [
+    //   {x:4,y:5},
+    //   {x:10,y:1},
+    //   {x:0,y:40}
+    // ]
+    // 第一种办法：
+    let newPoints = points.map(pair => {
+      [x, y] = pair;
+      return { x, y }
+    })
+    console.log(newPoints)
+    // 第二种办法：
+    let newPoints2 = points.map(([x, y]) => {
+      return { x, y };
+    });
+    console.log(newPoints2)
+
+    // 混合解构
+    const people = [
+      { name: "Henry", age: 20 },
+      { name: "Bucky", age: 25 },
+      { name: "Emily", age: 30 }
+    ];
+    //es5 写法
+    var age1 = people[0].age;
+    console.log(age1); // 20
+    // ES6
+    // const [age] = people; // 这样解构
+    // console.log(age); // {name: "Henry", age: 20}
+    const [{age}] = people; // 这样解构
+    console.log(age); // 20
+
+    /* 
+      注意：
+        当使用解构来配合 var、let、const 来声明变量时，
+        必须提供初始化程序（即等号右边的值）。
+    */
+  </script>
+</body>
+
+</html>

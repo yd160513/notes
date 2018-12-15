@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>展开运算符</title>
+</head>
+
+<body>
+  <script>
+    /* 
+      rest参数是将剩余参数合并成一个数组，
+      展开运算符是将一个数组进行分割，将各个项作为分离的参数传给函数
+      当用在字符串或数组前时称为扩展运算符，用于将数组或字符串进行拆解
+    */
+    //  有时候函数不允许传入数组，这时候利用展开运算符
+      // 原始
+      let value1 = 1;
+      let value2 = 2;
+      let value3 = 3;
+      console.log(Math.max(value1, value2, value3)); // 3
+      // 扩展运算符针对数组
+      var values = [1, 2, 3, 4, 5, 6];
+      console.log(Math.max(...values)); // 6
+      // 还可以和其他参数混用
+      console.log(Math.max(...values, 7)); // 7
+      // 扩展运算符针对字符串
+      var str = 'String';
+      console.log(...str); // S t r i n g
+      // 拼接数组
+      var defaultColors = ["red", "greed"];
+      var favoriteColors = ["orange", "yellow"];
+      var fallColors = ["fire red", "fall orange"];
+      console.log(["blue", "green", ...fallColors, ...defaultColors, ...favoriteColors])
+      //["blue", "green", "fire red", "fall orange", "red", "greed", "orange", "yellow"]
+  </script>
+</body>
+
+</html>
