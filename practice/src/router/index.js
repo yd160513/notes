@@ -14,6 +14,7 @@ import KeepAliveA from '@/view/keepAlive/a'
 import KeepAliveB from '@/view/keepAlive/b'
 import KeepAliveC from '@/view/keepAlive/c'
 import RadioCheckbox from '@/view/radioCheckbox'
+import Validate from '@/view/validate'
 
 
 Vue.use(Router)
@@ -84,6 +85,11 @@ export const constantRouterMap = [
       path: '/RadioCheckbox',
       name: 'RadioCheckbox',
       component: RadioCheckbox
+    },
+    {
+      path: '/Validate',
+      name: 'Validate',
+      component: Validate
     }]
   }
 ];
