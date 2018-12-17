@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Iterator 和 for…of 循环</title>
+</head>
+
+<body>
+  <script>
+    /*
+      javascript原有的表示集合的数据结构，主要是数组(Array)和对象(Object).
+      ES6又添加了Set和Map，这样就需要一个统一的接口机制来处理不同的数据解构。
+      遍历器就是这样一种机制，它是一种接口，为各种不同的数据结构提供统一的访问机制，
+      任何数据结构只要部署Iterator接口，就可以完成遍历操作（即一次遍历改数据结构的所有成员）
+    */
+    /* 
+      Iterator的作用：
+        1. 为各种数据结构，提供一个统一的、简便的访问接口
+        2. 使得数据结构的成员能够按照某种次序排序
+        3. ES6创造了for...of循环，Iterator接口主要供for...of使用
+    */
+    /* 
+       原生具备Iterator接口的数据：
+         1. Array
+         2. set容器
+         3. map容器
+         4. String
+         5. 函数的arguments对象
+         6. NodeList对象
+    */
+    let arr3 = [1, 2, 'kobe', true];
+    for (let i of arr3) {
+      console.log(i); // 1 2 kobe true
+    }
+    let str = 'abcd';
+    for (let item of str) {
+      console.log(item); // a b c d
+    }
+    var engines = new Set(["Gecko", "Trident", "Webkit", "Webkit"]);
+    for (var e of engines) {
+      console.log(e);
+    }
+    // Gecko
+    // Trident
+    // Webkit
+
+    /* 
+      几种遍历方式比较：
+        1. for...of循环不仅支持数组、大多数类数组、也支持字符串遍历，此外还支持set和map对象遍历
+        2. for...in循环可以遍历字符串、对象、数组，不能遍历set/map
+        3. forEach循环不能遍历字符串、对象，可以遍历set/map
+    */
+  </script>
+</body>
+
+</html>
