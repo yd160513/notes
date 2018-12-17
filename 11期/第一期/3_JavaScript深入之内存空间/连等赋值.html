@@ -1,20 +1,34 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>连等赋值</title>
 </head>
+
 <body>
   <script>
     // 问题
-    var a = {n: 1};
-    var b = a;
-    a.x = a = {n: 2};
-    console.log(a.x);
-    console.log(b.x);
+    var a = { n: 1 };
+    var b = a; // 把a的引用复制了一份给b
+    a.x = a = { n: 2 }; // . 的优先级高于 = 所以先生成 a = {n: 1, x: undefined}
+    console.log(a.x); // undefined
+    console.log(b); // {n: 1, x: {n: 2}}
+    console.log(b.x); // {n: 2}
+    /*
+      1. var b = a; // 把a的引用复制了一份给b
+      2. a.x = a = { n: 2 }; // . 的优先级高于 = 所以先生成 a = {n: 1, x: undefined}
+      3. a = {n: 2} // 在堆内存中创建了一个 {n: 2} 然后将这个引用指向了 a
+      4. a.x = a // a.x 中的 a 是指{n: 1, x: undefined}也就是最一开始的原对象，赋值运算符右边的 a 指的是{n: 2},所以执行完之后就是{n: 1, x: {n: 2}}
+                 // b 也引用的是原对象，所以相当于是改b 
+                 // a.x = a = { n: 2 } 执行结束之后如果没有 b = a 那么 {n: 1, x: {n: 2}} 将被销毁
+      5. a.x === undefined 是因为 a 的指向在 a = {n: 2}的时候就被更改了，所以这里没有x，所以是undefined
+      6. b === {n: 1, x: {n: 2}} 是因为 b 一直引用着原对象，所以所有更改原对象也会就相当于是在更改b
+     */
   </script>
   <!-- 解析: https://www.cnblogs.com/xxcanghai/p/4998076.html -->
 </body>
+
 </html>
