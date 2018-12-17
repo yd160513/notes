@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>回流和重绘</title>
+</head>
+
+<body>
+  <script>
+    /* 
+      文档加载完成之后到完全显示中间的过程：
+        1. 根据文档生成DOM树(包括display:none的节点)
+        2. 在DOM树基础上根据节点的几何属性(margin/padding/width/height等)生成render树
+           (不包括display:none、head节点但会包括visibility: hidden节点)
+        3. 在render树基础上进一步渲染包括color、outline等样式
+     */
+    /* 
+     回流(reflow)：当render树中的一部分或者全部因为大小、边距等问题发生改变而需要重建的过程叫做回流
+     重绘(repaint)：当元素的一部分属性发生变化，如背景颜色不会引起布局变化而需要重建的过程叫重绘
+     */
+
+    /* ************************为什么会引起回流************************** */
+    /* 
+      在定义中有体现，大概包括5大点：
+      1. DOM树结构变化，添加或者删除DOM节点
+      2. 元素的几何变化，margin/padding/width/height/border
+      3. 页面初始化渲染
+      4. 获取某些属性：
+          有些浏览器已经做了处理，等到足够的数量或者一定的时间，或者某一个线程结束，再一起处理，这样就只发生一次重排。
+          但是在获取某些属性的时候浏览器做的这些优化就不起作用了：
+            offsetTop、offsetLeft、 offsetWidth、offsetHeight、
+            scrollTop、scrollLeft、scrollWidth、scrollHeight、 
+            clientTop、clientLeft、clientWidth、clientHeight、
+            getComputedStyle() (currentStyle in IE)
+            所以在多次使用时应进行缓存
+      5. 浏览器窗口发生变化-resize(调整)时间发生时
+     */
+    //  栗子：
+    var s = document.body.style;
+    s.padding = "2px"; // 回流+重绘
+    s.border = "1px solid red"; // 再一次 回流+重绘
+    s.color = "blue"; // 再一次重绘
+    s.backgroundColor = "#ccc"; // 再一次 重绘
+    s.fontSize = "14px"; // 再一次 回流+重绘
+    // 添加node，再一次 回流+重绘
+    document.body.appendChild(document.createTextNode('abc!'));
+    
+    /* 
+      结论：
+        回流比重绘代价高，
+        回流肯定会有重绘，但是重绘不一定伴随着回流。
+     */
+
+    /* ************************如何避免回流************************** */
+    /* 
+      1. 如果想设定元素的样式，直接改变class名，而不是改变class中的某个特定的属性，比如height，weight;
+      2. 避免设置多项内联样式，就是说少使用style；
+      3. 脱离文档流；应用元素动画的时候，使用属性的position属性的fixed值或absolute值;
+      4. 避免使用table
+      5. 尽量在DOM树末端改变class，改变子节点的样式
+     */
+
+    /* ************************扩展：DocumentFragment ************************** */
+    /* 
+      DocumentFragment 节点不属于文档树，继承的 parentNode 属性总是 null。
+      它插入的时候不插入它本身，而是插入它的子孙节点，这样起到了一个占位符的作用，
+      类似于vue中的template
+     */
+  </script>
+</body>
+
+</html>

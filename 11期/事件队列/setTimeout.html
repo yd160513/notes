@@ -16,14 +16,67 @@
         主线程上的时间远远长于异步任务，所以延迟时间大于3秒
 
      */
-    setTimeout(() => {
-      task()
-    }, 3000)
+    // setTimeout(() => {
+    //   task()
+    // }, 3000)
 
-    sleep(10000000)
+    // sleep(10000000) // sleep执行完之后远远大于3秒，但是sleep没有执行完，setTimeout是没有办法执行的
 
     // setTimeout(fn,0) // 这样的代码不代表立即执行，代表只要执行栈为空就立刻执行
     // setTimeout： 0毫秒实际上达不到，HTML标准规定最少是4毫秒
+
+    /* ***********************面试题************************* */
+
+    // 面试题1. ----先输出一个5，然后一秒一个5
+    for (var i = 0; i < 5; i++) {
+
+      setTimeout(function () {
+
+        console.log(i);
+
+      }, 1000 * i);
+
+    }
+
+    /*
+    面试题2. 如果被setTimeout推迟执行的回调函数是某个对象的方法，
+       那么该方法中的this关键字将指向全局环境，而不是定义时所在的对象
+     */
+    var x = 1;
+    var o = {
+      x: 2,
+      y() {
+        console.log(this.x);
+      }
+    }
+    setTimeout(o.y, 1000); // 1
+
+    // 面试题3. setTimeout在全局对象中执行，这里没有this.login的值，所以是undefined
+    function User(login) {
+      this.login = login;
+      this.sayHi = function () {
+        console.log(this.login);
+      }
+    }
+    var user = new User('John');
+    setTimeout(user.sayHi, 1000); // undefined
+
+    // 上述问题解决办法
+    // 1. sayHi是在user作用域内执行，而不是在全局作用域内执行，所以能够显示正确的值。
+    setTimeout(function () {
+      user.sayHi(); // John
+    }, 1000);
+    // 2. 使用bind方法，将绑定sayHi绑定在user上面。
+    setTimeout(user.sayHi.bind(user), 1000); // John
+
+    // 面试题4 
+    // 这样相当于给setTimeout传入一个undefined，
+    // 可以理解为就和没有setTimeout一样，直接输出0-4
+    for (var i = 0; i < 5; i++) {
+      setTimeout((function (i) {
+        console.log('75:' + i);
+      })(i), i * 1000);
+    }
   </script>
 </body>
 

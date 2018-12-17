@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>执行机制及练习题</title>
+</head>
+
+<body>
+  <script>
+    /* 
+      执行机制：
+        同步任务-->宏任务-->微任务-->下一个宏任务
+      执行：javascript在不同的环境下执行方式不同：node,浏览器
+      运行：大多指javascript解析引擎，是统一的
+     */
+    console.log('1');
+    
+    setTimeout(function () {
+      console.log('2');
+      process.nextTick(function () {
+        console.log('3');
+      })
+      new Promise(function (resolve) {
+        console.log('4');
+        resolve();
+      }).then(function () {
+        console.log('5')
+      })
+    })
+    
+    process.nextTick(function () {
+      console.log('6');
+    })
+
+    new Promise(function (resolve) {
+      console.log('7');
+      resolve();
+    }).then(function () {
+      console.log('8')
+    })
+
+    setTimeout(function () {
+      console.log('9');
+      process.nextTick(function () {
+        console.log('10');
+      })
+      new Promise(function (resolve) {
+        console.log('11');
+        resolve();
+      }).then(function () {
+        console.log('12')
+      })
+    })
+    // 1 7 6 8 2 4 3 5 9 11 10 12
+
+    /* 
+      第一轮事件循环：
+      1. 整体script作为第一宏任务进入主线程，遇到console.log输出 1 
+      2. 遇到setTimeout将其放到宏任务的事件循环（Event Queue）中（setTimeout1）
+      3. 遇到process.nextTick将其放到本次循环中的微任务的事件循环中
+      4. 遇到promise直接执行new Promise，输出 7 ，将then分发到微任务的事件循环中（then1）
+      5. 遇到setTimeout将其放到宏任务的事件循环（Event Queue）中（setTimeout2）
+      6. 本次宏任务执行完之后开始执行微任务
+      7. 执行process.nextTick输出 6 
+      8. 执行then微任务输出 8 
+
+      第二轮事件循环：
+      1. 从setTimeout1这个宏任务开始：
+      2. 遇到console.log输出 2 
+      3. 遇到prcess.nextTick 将其分发到微任务
+      4. 遇到new Promise 直接执行输出 4 ,将then分发到微任务
+      5. 开始执行本次循环微任务
+      6. 执行proocess.nextTick输出 3 
+      7. 执行then输出 5
+
+      第三轮事件循环
+      1. 从setTimeout2 宏任务开始
+      2. 遇到console.log输出 9 
+      3. 遇到process.nextTick 将其分发到微任务
+      4. 遇到new Promise直接输出 11 ，将then分发到微任务
+      5. 开始执行微任务
+      6. 执行process.nextTick输出 10
+      7. 执行then输出 12
+     */
+  </script>
+</body>
+
+</html>

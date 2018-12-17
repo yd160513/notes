@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>箭头函数和普通函数的区别</title>
+</head>
+
+<body>
+  <script>
+    /* 
+      1. 箭头函数是匿名函数，不能使用new，不能作为构造函数
+      2. 箭头函数没有arguments，取而代之的是rest参数
+      3. 箭头函数不绑定this，会捕获其所在的上下文的this值，作为自己的this值
+         箭头函数：根据外层（函数或者全局）作用域（词法作用域）来决定this的。
+      4. 箭头函数通过call()或apply()调用一个函数时改变不了this的指向
+      5. 箭头函数没有原型，不能当做Generator函数，不能使用yield关键字
+      
+     */
+    //  箭头函数没有arguments，取而代之的是rest参数
+    function B(b) { // 普通函数
+      console.log(arguments);
+    }
+    B(1)
+    // let c = (c) => {
+    //   console.log(arguments); // 报错
+    // }
+    // c(1);
+    let d = (...d) => {
+      console.log(d); // [1]
+    }
+    d(1);
+
+    // 箭头函数不绑定this，会捕获其所在的上下文的this值，作为自己的this值
+    var obj = {
+      a: 10,
+      b: () => {
+        console.log(this.a); // undefined  箭头函数：根据外层（函数或者全局）作用域（词法作用域）来决定this的。
+        console.log(this); // Window {postMessage: ƒ, blur: ƒ, focus: ƒ, close: ƒ, frames: Window, …}
+      },
+      c: function () {
+        console.log(this.a); // 10
+        console.log(this); // {a: 10, b: ƒ, c: ƒ}
+      }
+    }
+    obj.b();
+    obj.c();
+    // 
+    var obj = {
+      a: 10,
+      b: function () {
+        console.log(this.a); //10
+      },
+      c: function () {
+        return () => {
+          console.log(this.a); //10  箭头函数：根据外层（函数或者全局）作用域（词法作用域）来决定this的。
+        }
+      }
+    }
+  </script>
+</body>
+
+</html>
