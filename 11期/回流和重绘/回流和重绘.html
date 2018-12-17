@@ -65,9 +65,16 @@
 
     /* ************************扩展：DocumentFragment ************************** */
     /* 
-      DocumentFragment 节点不属于文档树，继承的 parentNode 属性总是 null。
-      它插入的时候不插入它本身，而是插入它的子孙节点，这样起到了一个占位符的作用，
-      类似于vue中的template
+      1. DocumentFragment 节点不属于文档树，继承的 parentNode 属性总是 null。
+         它插入的时候不插入它本身，而是插入它的子孙节点，这样起到了一个占位符的作用，
+         类似于vue中的template。
+      2. 使用display:none,只引发两次回流和重绘。因为display:none的元素不会出现在render树
+      3. DOM Tree 和样式结构体组合后构建render tree, render tree类似于DOM tree，
+         但区别很大，render tree能识别样式，render tree中每个NODE都有自己的style，
+         而且 render tree不包含隐藏的节点 (比如display:none的节点，还有head节点)，
+         因为这些节点不会用于呈现，而且不会影响呈现的，所以就不会包含到 render tree中。
+         注意 visibility:hidden隐藏的元素还是会包含到 render tree中的，
+         因为visibility:hidden 会影响布局(layout)，会占有空间。
      */
   </script>
 </body>
