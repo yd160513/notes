@@ -65,6 +65,7 @@ export default {
         'keepAlive': '/keepAliveA',
         'RadioCheckbox': '/RadioCheckbox',
         '字符串验证': '/Validate',
+        '排序表格': '/sortTable',
       };
       const id = '0';
       for (let [key, value] of Object.entries(obj)) {
