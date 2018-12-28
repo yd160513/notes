@@ -10,6 +10,7 @@
 
 <body>
   <script>
+    /* ****************Object.assign()********************** */
     // Object.assign() // 有人说是深拷贝，但是其实是浅拷贝
     // 更改对象中的基本数据类型确实不会互相影响
     let a = {
@@ -20,12 +21,52 @@
       }
     }
     let b = Object.assign({}, a);
-    b.name = '小白1'
-    console.log(a); // book: {title: "You Don't Know JS", price: "45"} name: "小白"
-    console.log(b); // book: {title: "You Don't Know JS", price: "45"} name: "小白1"
-    // b.book.title = '123456'
-    // console.log(a);
-    // console.log(b);
+    // b.name = '小白1' // 更改对象中的基本数据类型不会影响a
+    // console.log(a); // book: {title: "You Don't Know JS", price: "45"} name: "小白"
+    // console.log(b); // book: {title: "You Don't Know JS", price: "45"} name: "小白1"
+    b.book.title = '123456' // 更改对象中的对象的就会影响
+    console.log(a); // book: {title: "123456", price: "45"} name: "小白"
+    console.log(b); // book: {title: "123456", price: "45"} name: "小白"
+    
+    console.log('----------------------------------------');
+    /* ****************展开运算符********************** */
+    let c = {
+      name: "小白",
+      book: {
+        title: "You Don't Know JS",
+        price: "45"
+      }
+    }
+    let d = {...c};
+    console.log(d); // book: {title: "You Don't Know JS", price: "45"} name: "小白"
+
+    // d.name = 'd中的小白'
+    console.log(c); // book: {title: "You Don't Know JS", price: "45"} name: "小白"
+    console.log(d); // book: {title: "You Don't Know JS", price: "45"} name: "d中的小白"
+
+    d.book.title = 'd中book的title'
+    console.log(c); // book: {title: "d中book的title", price: "45"} name: "小白"
+    console.log(d); // book: {title: "d中book的title", price: "45"} name: "小白"
+    // 结果和Object.assign()一样，修改对象中的基本数据类型不会互相影响
+    // 但是修改对象中的对象中的基本数据类型会影响
+    
+    console.log('----------------------------------------');
+    /* ****************Array.prototype.slice()********************** */
+    // slice()返回一个新的数组对象，这个对象是由begin和end决定的原数组的浅拷贝，不会影响原数组
+    let e = [1, 2, [3, 4]];
+    let f = e.slice(1);
+    console.log(f); // 2, [3, 4]
+
+    f[0] = 'q';
+    console.log(e); // [1, 2, [3, 4]]
+    console.log(f); // ["q", [3, 4]]
+
+    f[1][0] = 'n';
+    console.log(e); // [1, 2, ["n", 4]]
+    console.log(f); // ["q", ["n", 4]]
+    // 结果和上边一样，修改数组中的基本数据类型不会互相影响
+    // 但是修改数组中的数组中的基本数据类型会影响
+
   </script>
 </body>
 

@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>深拷贝使用场景</title>
+</head>
+
+<body>
+  <script>
+    // 深拷贝会拷贝所有属性，包括属性的所指向的动态分配的内存
+    /* ******************使用场景************************* */
+
+    /* ******************JSON.parse(JSON.stringify(object))************************* */
+    let a = {
+      name: "a中的name",
+      book: {
+        title: "You Don't Know JS",
+        price: "45"
+      }
+    }
+    let b = JSON.parse(JSON.stringify(a));
+    console.log(b); // book: {title: "You Don't Know JS", price: "45"} name: "a中的name"
+
+    b.name = '改成了b中的name';
+    console.log(a); // book: {title: "You Don't Know JS", price: "45"} name: "a中的name"
+    console.log(b); // book: {title: "You Don't Know JS", price: "45"} name: "改成了b中的name"
+
+    b.book.price = '10000';
+    console.log(a); // book: {title: "You Don't Know JS", price: "45"} name: "a中的name"
+    console.log(b); // book: {title: "You Don't Know JS", price: "10000"} name: "改成了b中的name"
+    // 通过深拷贝之后可以对a没有任何的影响
+
+
+    /* ******************JSON.parse(JSON.stringify(array))************************* */
+    let c = [0, "1", [2, 3]];
+    let d = JSON.parse(JSON.stringify(c));
+    console.log(d); // [0, "1", [2, 3]]
+
+    d[0] = 'd[0]改成了123';
+    console.log(c); // [0, "1", [2, 3]]
+    console.log(d); // ["d[0]改成了123", "1", [2, 3]]
+
+    d[2][0] = 'd[2][0]改成了100';
+    console.log(c); // [0, "1", [2, 3]]
+    console.log(d); // ["d[0]改成了123", "1", ["d[2][0]改成了100", 3]]
+    // 同样也是完全不受影响
+
+
+    /* ******************深拷贝的弊端************************* */
+    /* 
+      1. 忽略undefined
+      2. 忽略symbol
+      3. 不能序列化函数 (不能处理函数)
+      4. 不能解决循环引用的对象
+    */
+    //  1 2 4 的证明：
+    let obj = {
+      name: 'muyiy',
+      a: undefined,
+      b: Symbol('muyiy'),
+      c: function () { }
+    }
+    let tempObj = JSON.parse(JSON.stringify(obj));
+    console.log(tempObj); // {name: "muyiy"}
+
+    // 4 的证明：
+    let obj2 = {
+      a: 1,
+      b: {
+        c: 2,
+        d: 3
+      }
+    }
+    let tempObj2 = JSON.parse(JSON.stringify(obj2));
+    console.log(tempObj2); // {a: 1, b: {c: 2, d: 3}}
+
+    obj2.a = obj2.b;
+    obj2.b.c = obj2.a;
+    let tempObj3 = JSON.parse(JSON.stringify(obj2));
+    console.log(tempObj3); // Uncaught TypeError: Converting circular structure to JSON
+
+
+    /* ******************总结************************* */
+    /* 
+      赋值：
+        1. 和原始数据指向同一对象
+        2. 第一层数据为基本数据类型：改变会使原数据一同改变
+        3. 原数据中包含子对象：改变会使原数据一同改变
+      浅拷贝：
+        1. 和原始数据指向的不是同一对象
+        2. 第一层数据为基本数据类型：改变时不会改变原数据
+        3. 原数据中包含子对象：改变会使原数据一同改变
+      深拷贝：
+        1. 和原始数据指向的不是同一对象
+        2. 第一层数据为基本数据类型：改变时不会改变原数据
+        3. 原数据中包含子对象：改变时不会改变原数据
+    */
+
+
+  </script>
+</body>
+
+</html>
