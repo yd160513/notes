@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>浅拷贝使用场景</title>
+</head>
+
+<body>
+  <script>
+    // Object.assign() // 有人说是深拷贝，但是其实是浅拷贝
+    // 更改对象中的基本数据类型确实不会互相影响
+    let a = {
+      name: "小白",
+      book: {
+        title: "You Don't Know JS",
+        price: "45"
+      }
+    }
+    let b = Object.assign({}, a);
+    b.name = '小白1'
+    console.log(a); // book: {title: "You Don't Know JS", price: "45"} name: "小白"
+    console.log(b); // book: {title: "You Don't Know JS", price: "45"} name: "小白1"
+    // b.book.title = '123456'
+    // console.log(a);
+    // console.log(b);
+  </script>
+</body>
+
+</html>

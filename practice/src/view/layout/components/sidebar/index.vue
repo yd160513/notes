@@ -63,9 +63,10 @@ export default {
         'json转tree': '/tree',
         '动态渲染checkbox和input': '/dynamicRender',
         'keepAlive': '/keepAliveA',
-        'RadioCheckbox': '/RadioCheckbox',
-        '字符串验证': '/Validate',
+        'RadioCheckbox': '/radioCheckbox',
+        '字符串验证': '/validate',
         '排序表格': '/sortTable',
+        '循环表单': '/loopForm',
       };
       const id = '0';
       for (let [key, value] of Object.entries(obj)) {

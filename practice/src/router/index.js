@@ -16,6 +16,7 @@ import KeepAliveC from '@/view/keepAlive/c'
 import RadioCheckbox from '@/view/radioCheckbox'
 import Validate from '@/view/validate'
 import SortTable from '@/view/sortTable'
+import LoopForm from '@/view/loopForm'
 
 
 Vue.use(Router)
@@ -70,7 +71,7 @@ export const constantRouterMap = [
       }
     },
     {
-      path: '/KeepAliveB',
+      path: '/keepAliveB',
       name: 'KeepAliveB',
       component: KeepAliveB,
       meta: {
@@ -78,24 +79,29 @@ export const constantRouterMap = [
       }
     },
     {
-      path: '/KeepAliveC',
+      path: '/keepAliveC',
       name: 'KeepAliveC',
       component: KeepAliveC
     },
     {
-      path: '/RadioCheckbox',
+      path: '/radioCheckbox',
       name: 'RadioCheckbox',
       component: RadioCheckbox
     },
     {
-      path: '/Validate',
+      path: '/validate',
       name: 'Validate',
       component: Validate
     },
     {
-      path: '/SortTable',
+      path: '/sortTable',
       name: 'SortTable',
       component: SortTable
+    },
+    {
+      path: '/loopForm',
+      name: 'LoopForm',
+      component: LoopForm
     }]
   }
 ];
