@@ -147,6 +147,13 @@ const data= [
       "id": "353245"
   },
   {
+      "VIEW_DETAIL": "",
+      "pid": "700",
+      "PROD_VIEW": "99641",
+      "label": "最后一个子节点",
+      "id": "353245"
+  },
+  {
       "VIEW_DETAIL": "273366",
       "pid": "400",
       "PROD_VIEW": "99641",

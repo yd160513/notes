@@ -94,7 +94,7 @@ export default {
     btn() {
       console.log(this.checkedList1);
     },
-    btn2() {debugger
+    btn2() {
       const newArr = [];
       for (let value of this.checkList2) {
         for (let item of this.mockList2) {

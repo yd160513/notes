@@ -98,7 +98,7 @@ export default {
     },
     // 提交
     submitForm(refName) {
-      this.$refs[refName].validate(valid => {debugger
+      this.$refs[refName].validate(valid => {
         if (valid) {
           let v = this.validateChildForm(refName);
           if (!v) return false;
