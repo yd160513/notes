@@ -67,6 +67,7 @@ export default {
         '字符串验证': '/validate',
         '排序表格': '/sortTable',
         '循环表单': '/loopForm',
+        '表格分页记忆': '/tablePageMemory',
       };
       const id = '0';
       for (let [key, value] of Object.entries(obj)) {

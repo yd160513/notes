@@ -17,6 +17,7 @@ import RadioCheckbox from '@/view/radioCheckbox'
 import Validate from '@/view/validate'
 import SortTable from '@/view/sortTable'
 import LoopForm from '@/view/loopForm'
+import TablePageMemory from '@/view/tablePageMemory'
 
 
 Vue.use(Router)
@@ -102,6 +103,11 @@ export const constantRouterMap = [
       path: '/loopForm',
       name: 'LoopForm',
       component: LoopForm
+    },
+    {
+      path: '/tablePageMemory',
+      name: 'TablePageMemory',
+      component: TablePageMemory 
     }]
   }
 ];
