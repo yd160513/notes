@@ -29,7 +29,7 @@ export default {
     dgTable: dialogTable // require("./dialogTable.vue")
   },
   mounted: function() {
-    this.$nextTick(function() {debugger
+    this.$nextTick(function() {
       // 模拟初始化一个选中
       this.checkedData = [{ personId: 2 }];
     });

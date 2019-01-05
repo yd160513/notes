@@ -49,6 +49,11 @@ export default {
       this.pagination.pageNumber = 1;
       this.queryData();
       this.dialogVisible = true;
+    this.$nextTick(function() {
+      // 初始化渲染
+      this.pagination.pageNumber = 1;
+      this.queryData();
+    });
     },
     handleClearData() {
       this.multipleSelectionAll = [];
@@ -75,8 +80,8 @@ export default {
       let that = this;
       this.multipleSelectionAll.forEach(row => {
         selectAllIds.push(row[idKey]);
-      });debugger
-      this.$refs.table.clearSelection();
+      });
+      this.$refs.table.clearSelection(); debugger
       for (var i = 0; i < this.tableData.length; i++) {
         if (selectAllIds.indexOf(this.tableData[i][idKey]) >= 0) {
           // 设置选中，记住table组件需要使用ref="table"
@@ -170,11 +175,6 @@ export default {
     }
   },
   mounted: function() {
-    this.$nextTick(function() {
-      // 初始化渲染
-      this.pagination.pageNumber = 1;
-      this.queryData();
-    });
   },
   watch: {
     checkedData: {
