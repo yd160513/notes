@@ -18,6 +18,7 @@ import Validate from '@/view/validate'
 import SortTable from '@/view/sortTable'
 import LoopForm from '@/view/loopForm'
 import TablePageMemory from '@/view/tablePageMemory'
+import DialogtablePageMemory from '@/view/dialogtablePageMemory'
 
 
 Vue.use(Router)
@@ -108,6 +109,11 @@ export const constantRouterMap = [
       path: '/tablePageMemory',
       name: 'TablePageMemory',
       component: TablePageMemory 
+    },
+    {
+      path: '/dialogtablePageMemory',
+      name: 'DialogtablePageMemory',
+      component: DialogtablePageMemory 
     }]
   }
 ];

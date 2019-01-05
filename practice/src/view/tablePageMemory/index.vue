@@ -14,6 +14,9 @@
       :layout="pagination.layout"
       @size-change="sizeChange"
     ></el-pagination>
+    <div>
+      <el-button @click="$router.push({path: '/dialogtablePageMemory'})">跳转到 DialogtablePageMemory</el-button>
+    </div>
   </div>
 </template>
 <script>
@@ -45,7 +48,6 @@ export default {
   },
 
   methods: {
-
     // 切换的时候将点击的这个赋值给当前页选中的
     handleSelectionChange(val) {
       this.multipleSelection = val;
@@ -54,6 +56,7 @@ export default {
     // 切换每页显示条数
     sizeChange(val) {
       this.pagination.pageSizes = val;
+      this.selectChangeCore();
       this.queryData();
     },
 
@@ -67,7 +70,8 @@ export default {
     // 设置选中行
     setSelectRow() {
       // 1. 如果所有选中的为空，则退出
-      if (!this.multipleSelectionAll || this.multipleSelectionAll.length === 0) return;
+      if (!this.multipleSelectionAll || this.multipleSelectionAll.length === 0)
+        return;
       // 2. 拿到所有选中的标识符
       const idKey = this.idKey;
       const allSelectedIds = [];
@@ -87,10 +91,13 @@ export default {
     // 核心代码(判断是否选中，是选中还是取消)
     selectChangeCore() {
       // 1. 判断所有选中中是否为空，为空则直接赋值并return
-      if (!this.multipleSelectionAll || this.multipleSelectionAll.length === 0) {
+      if (
+        !this.multipleSelectionAll ||
+        this.multipleSelectionAll.length === 0
+      ) {
         this.multipleSelectionAll = this.multipleSelection;
-        return ;
-      } 
+        return;
+      }
       // 2. 获取所有选中的标识符到数组
       const idKey = this.idKey;
       const allSelectedIds = [];
@@ -116,9 +123,9 @@ export default {
         if (allSelectedIds.includes(rowId)) {
           this.multipleSelectionAll.forEach((row, index) => {
             if (row[idKey] === rowId) {
-              this.multipleSelectionAll.splice(index, 1)
+              this.multipleSelectionAll.splice(index, 1);
             }
-          })
+          });
         }
       });
     },
@@ -134,14 +141,14 @@ export default {
         this.tableData.push({
           id: i,
           name: "晓东" + i,
-          gender: "男" + i,
+          gender: "男" + i
         });
       }
       // end------模拟动态分页
       setTimeout(() => {
         this.setSelectRow();
       }, 20);
-    },
+    }
   }
 };
 </script>
