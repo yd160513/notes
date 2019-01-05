@@ -81,7 +81,7 @@ export default {
       this.multipleSelectionAll.forEach(row => {
         selectAllIds.push(row[idKey]);
       });
-      this.$refs.table.clearSelection(); debugger
+      this.$refs.table.clearSelection(); 
       for (var i = 0; i < this.tableData.length; i++) {
         if (selectAllIds.indexOf(this.tableData[i][idKey]) >= 0) {
           // 设置选中，记住table组件需要使用ref="table"
