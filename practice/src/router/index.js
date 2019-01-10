@@ -19,6 +19,7 @@ import SortTable from '@/view/sortTable'
 import LoopForm from '@/view/loopForm'
 import TablePageMemory from '@/view/tablePageMemory'
 import DialogtablePageMemory from '@/view/dialogtablePageMemory'
+import ShoppingCart from '@/view/shoppingCart'
 
 
 Vue.use(Router)
@@ -114,6 +115,11 @@ export const constantRouterMap = [
       path: '/dialogtablePageMemory',
       name: 'DialogtablePageMemory',
       component: DialogtablePageMemory 
+    },
+    {
+      path: '/shoppingCart',
+      name: 'ShoppingCart',
+      component: ShoppingCart 
     }]
   }
 ];

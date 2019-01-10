@@ -68,6 +68,7 @@ export default {
         '排序表格': '/sortTable',
         '循环表单': '/loopForm',
         '表格分页记忆': '/tablePageMemory',
+        '购物车demo': '/shoppingCart',
       };
       const id = '0';
       for (let [key, value] of Object.entries(obj)) {
