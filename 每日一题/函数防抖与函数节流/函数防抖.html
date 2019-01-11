@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>函数防抖</title>
+</head>
+
+<body>
+  <input type="text" id="inp">
+  <script>
+      /* 
+        函数防抖：
+          触发事件后在n秒内函数只会执行一次，如果在n秒内又触发了事件，则会重新计算函数时间
+        思路：
+          每次触发事件时都取消之前的延时调用方法：
+      */
+    function debounce(fn, interval = 300) {debugger
+      let timeout = null; // 创建一个标记用来存放定时器的返回值
+      return function () {
+        clearTimeout(timeout); // 
+        timeout = setTimeout(() => {
+          fn.apply(this, arguments);
+        }, interval);
+      };
+    }
+    function sayHi(e) {
+      console.log('防抖成功');
+    }
+
+    var inp = document.getElementById('inp');
+    // window.addEventListener('resize', sayHi); // 未防抖
+    inp.addEventListener('input', debounce(sayHi, 500)); // 防抖
+  </script>
+</body>
+
+</html>

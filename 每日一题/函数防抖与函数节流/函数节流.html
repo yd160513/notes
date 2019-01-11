@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>函数节流</title>
+</head>
+
+<body>
+  <script>
+    /* 
+      函数节流：
+        连续触发事件但是在n秒中只执行一次，节流会稀释函数的执行频率
+      思路：
+        每次触发事件时都判断当前是否有等待执行的延时函数：
+    */
+    function throttle(fn, interval = 300) {
+      let canRun = true; // 通过闭包保存一个标记
+      return function () {
+        if (!canRun) return; // 在函数开头判断标记是否为true，不为true则return
+        canRun = false; // 立即设置为false
+        setTimeout(() => { // 将外部传入的函数的执行放在setTimeout中
+          fn.apply(this, arguments);
+          // 最后在setTimeout执行完毕后再把标记设置为true(关键)表示可以执行下一次循环了。当定时器没有执行的时候标记永远是false，在开头被return掉
+          canRun = true;
+        }, interval);
+      };
+    }
+    function sayHi(e) {
+      console.log(e.target.innerWidth, e.target.innerHeight);
+    }
+    // window.addEventListener('resize', sayHi); // 未节流
+    window.addEventListener('resize', throttle(sayHi, 3000));
+  </script>
+</body>
+
+</html>
