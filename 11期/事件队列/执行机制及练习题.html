@@ -17,7 +17,7 @@
       运行：大多指javascript解析引擎，是统一的
      */
     console.log('1');
-    
+
     setTimeout(function () {
       console.log('2');
       process.nextTick(function () {
@@ -30,7 +30,7 @@
         console.log('5')
       })
     })
-    
+
     process.nextTick(function () {
       console.log('6');
     })
@@ -85,6 +85,20 @@
       6. 执行process.nextTick输出 10
       7. 执行then输出 12
      */
+
+    Promise.resolve().then(() => {
+      console.log('Promise1')
+      setTimeout(() => {
+        console.log('setTimeout2')
+      }, 0)
+    })
+    setTimeout(() => {
+      console.log('setTimeout1')
+      Promise.resolve().then(() => {
+        console.log('Promise2')
+      })
+    }, 0)
+    // p1 s1 p2 s2
   </script>
 </body>
 
