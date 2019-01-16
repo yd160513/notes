@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "axios": "^0.18.0",
+    "echarts": "^4.2.0-rc.2",
     "element": "^0.1.4",
     "element-ui": "^2.4.9",
     "js-cookie": "^2.2.0",
