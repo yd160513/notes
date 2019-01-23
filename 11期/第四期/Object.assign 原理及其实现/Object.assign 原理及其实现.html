@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Object.assign 原理及其实现</title>
+</head>
+
+<body>
+  <script>
+    /* 
+      Object.assign()：
+        对于第一层中的原始数据类型进行的是深拷贝，
+        对于第一层中的引用类型，拷贝的只是引用地址（浅拷贝）
+        String类型和Symbol类型都会被拷贝，且不会跳过null和undefined
+     */
+    // 判断该函数是否有该函数，
+    if (typeof Object.assign2 != 'function') {
+      // 没有则在Object上创建一个
+      Object.defineProperty(Object, 'assign2', {
+        value: function (target) {
+          'use strict';
+          if (target == null) { // 目标对象必须有值，不能为null或undefined，即使是{}
+            throw new Error('Cannot convert undefined or null to object'); // 无法将undefined或null转换为object
+          }
+          // 使用Object()将assign2传进来的值转换为对象，最后return to
+          var to = Object(target);
+
+          for (var index = 1; index < arguments.length; index++) {
+            var nextSource = arguments[index];
+
+            if (nextSource !== null) {
+              // 使用for in 遍历出所有可枚举的自有属性，并复制给新对象，
+              for (var nextKey in nextSource) { // 使用for in 遍历所有对象
+                // 使用Object.prototype.hasOwnProperty 来找出自有属性
+                if (Object.prototype.hasOwnProperty.call(nextSource, nextKey)) {
+                  to[nextKey] = nextSource[nextKey]
+                }
+
+              }
+            }
+          }
+
+          return to;
+        },
+        writable: true,
+        configurable: true
+      })
+    }
+
+    /*
+      1. 因为原生挂载在Object上的属性是不可枚举的，所以需要用Object.defineProperty()来挂载;
+         Object.definePorperty('要在哪里定义属性', '属性名', '属性的描述')
+
+      2. 判断参数undefined和null是一样的，所以在判断时只需要  if (target == null) {}
+
+      3. Object.assign():合并对象时会将null、undefined忽略，且自身没有可枚举属性的也将被忽略（String类型的有，boolean和Number都没有）
+
+      4. Object.prototype.hasOwnProperty.call()：
+         如果直接myProject.hasOwnProperty()那么可能有的对象没有连接到原型上(比如通过Object.create(null)创建)，
+         这种情况下还像myProject.hasOwnProperty()这样就会报错
+     */
+  </script>
+</body>
+
+</html>
