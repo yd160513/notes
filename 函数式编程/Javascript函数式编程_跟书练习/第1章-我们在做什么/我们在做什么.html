@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>第一章-我们在做什么</title>
+</head>
+
+<body>
+  <script>
+    var conjoin = function(flock_x,flock_y) {
+      return flock_x + flock_y;
+    }
+    var breed = function(flock_x,flock_y) {
+      return flock_x * flock_y;
+    }
+    var flock_a = 4;
+    var flock_b = 2;
+    var flock_c = 0;
+    var result = conjoin(breed(flock_b, conjoin(flock_a, flock_c)), breed(flock_a, flock_b))
+    console.log(result); // 16
+
+    /* ***************把上边的重命名一下***************** */
+    var add = function(x, y) {
+      return x + y;
+    }
+    var multiply = function(x, y) {
+      return x * y;
+    }
+    var a = 4;
+    var b = 2;
+    var c = 0;
+    var result2 = add(multiply(b, add(a, c)), multiply(a, b))
+    console.log(result2); // 16
+
+    /* **********古人的知识*********** */
+    // 结合律
+    // add(add(x, y), z) === add(x, add(y, z));
+    // 交换律
+    // add(x, y) == add(y, x);
+    // 同一律
+    // add(x, 0) == x;
+    // 分配律
+    // multiply(x, add(y, z)) == add(multiply(x, y), multiply(x, z))
+  </script>
+</body>
+
+</html>

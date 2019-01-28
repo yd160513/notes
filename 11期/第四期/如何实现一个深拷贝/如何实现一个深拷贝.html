@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>如何实现一个深拷贝</title>
+</head>
+
+<body>
+  <script>
+    /*
+      深拷贝 ----> 浅拷贝 + 递归
+            ----> 循环
+        1. 递归的问题：
+            1.1 层级嵌套过多时出现栈溢出 --> 消除尾递归/改用循环
+            1.2 循环引用
+              解决办法：
+              1.2.1 循环检测
+              1.2.2 暴力破解
+     */
+    // 浅拷贝
+    function clone(source) {
+      var target = {};
+      for (i in source) {
+        if (source.hasOwnProperty(i)) { // 判断是不是自身拥有的，浅拷贝不拷贝原型链上的属性
+          target[i] = source[i];
+        }
+      }
+    }
+    /* ***********递归方式实现深拷贝*********** */
+    // 深拷贝
+    function clone2(source) {
+
+      // 判断参数是不是对象
+      if (!isObject(source)) return source;
+
+      var target = {};
+      for (i in source) {
+        if (source.hasOwnProperty(i)) {
+          // 判断正在遍历的这个是不是一个对象，如果是对象则进行递归
+          if (isObject(source)) {
+            target[i] = clone2(source[i]);
+          } else {
+            target[i] = source[i];
+          }
+        }
+      }
+      return target;
+    }
+
+    function isObject(data) {
+      return Object.prototype.toString.call(data) === '[object Object]';
+    }
+    /* ***********循环方式实现深拷贝*********** */
+    var a = {
+      a1: 1,
+      a2: {
+        b1: 1,
+        b2: {
+          c1: 1
+        }
+      }
+    }
+    /*
+      2. 循环方式实现
+        2.1 思路：
+          用循环遍历一个树级结构的数据(多层对象嵌套，如上)
+          需要借助一个栈，栈存储需要拷贝的节点，栈为空时就遍历完了。
+    */
+    function cloneLoop(x) {
+      const root = {};
+      // 栈
+      const loopList = [
+        {
+          parent: root,
+          key: undefined,
+          data: x, // 要拷贝的所有数据
+        }
+      ];
+      while (loopList.length) {
+        // 深度优先
+        const node = loopList.pop(); // 删除数组中最后一个，并返回删除的元素
+        const parent = node.parent;
+        // 用来存放父对象中子元素的拷贝对象的key，value就是一个对象，
+        const key = node.key;
+        const data = node.data;
+
+        // 初始化赋值目标,key为undefined则拷贝到父元素，否则拷贝到子元素
+        let res = parent;
+        if (typeof key !== 'undefined') {
+          res = parent[key] = {};
+        }
+
+        for (let k in data) {
+          if (data.hasOwnProperty(k)) {
+            if (typeof data[k] === 'object') {
+              loopList.push({
+                parent: res,
+                key: k,
+                data: data[k],
+              });
+            } else {
+              res[k] = data[k];
+            }
+          }
+        }
+      }
+      return root;
+    }
+
+    /* *******************破解循环引用******************** */
+    /* 
+      加入一个对象a,a下面的两个键值都引用了同一个对象b，
+      经过深拷贝之后，a的两个键值都会丢失引用关系，从而变成两个不同的对象
+    */
+    var b = { a: 1 };
+    var a = { a1: b, a2: b };
+    console.log(a.a1 === a.a2); // true
+    var c = clone2(a);
+    console.log(c.a1 === c.a2); // false
+
+    /*
+    如果发现个新对象就把这个对象和他的拷贝存下来，
+    每次拷贝对象前，都先看看这个对象是不是已经拷贝过了，
+    如果已经拷贝过了，就不需要拷贝了，反之则拷贝，这样就额可以保留引用关系了
+    */
+
+    // 保持引用关系
+    function cloneForce(x) {
+      const uniqueList = []; // 用来去重
+
+      let root = [];
+
+      // 循环数组
+      const loopList = [
+        {
+          parent: root,
+          key: undefined,
+          data: x,
+        }
+      ];
+      
+      while (loopList.length) {
+        const node = loopList.pop();
+        const parent = node.parent;
+        const key = node.key;
+        const data = node.data;
+
+        // 初始化赋值目标，key为undefined则拷贝到父元素，否则key则是一个对象，则拷贝到子元素等待遍历
+        let res = parent;
+        if (typeof key !== 'undefined') {
+          res = parent[key] = {};
+        }
+
+        // 对象已经被拷贝过
+        let uniqueData = find(uniqueList, data);
+        if (uniqueData) {
+          parent[key] = uniqueData.target;
+          break; // 中断本次循环
+        }
+
+        // 对象没有被拷贝过
+        uniqueList.push({
+          source: data,
+          target: res,
+        });
+
+        for (let k in data) {
+          if (data.hasOwnProperty(k)) {
+            if (typeof data[k] === 'object') {
+              loopList.push({
+                parent: res,
+                key: k,
+                data: data[k],
+              });
+            } else {
+              res[k] = data[k];
+            }
+          }
+        }
+      }
+      return root;
+    }
+
+    function find(arr, item) {
+      for (let i = 0; i < arr.length; i++) {
+        if (arr[i].source === item) {
+          return arr[i];
+        }
+      }
+      return null;
+    }
+
+    var b = { a: 1 };
+    var a = { a1: b, a2: b };
+    console.log(a.a1 === a.a2); // true
+    var c = cloneForce(a);
+    console.log(c.a1 === c.a2); // true
+
+
+  </script>
+</body>
+
+</html>

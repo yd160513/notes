@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>一等公民的函数</title>
+</head>
+
+<body>
+  <script>
+    var hi = function (name) {
+      return 'hi ' + name;
+    }
+    var greeting = function (name) {
+      return hi(name); // 这样的写法完全是多余的
+    }
+    // 上边的写法是多余的，因为可以直接用()来调用
+    // greeting只是转了个身，以相同的参数调用了hi
+    // 因此可以这样写
+    var greeting = hi;
+    greeting('times');
+    // 用一个函数把另一个函数包起来，目的仅仅是延迟执行，这样真的是一个非常糟糕的编程习惯
+
+    /* ***************************** */
+    // 太傻了
+    var getServerStuff = function (callback) {
+      return ajaxCall(function (json) {
+        return callback(json);
+      })
+    }
+    // 上边的这种等于这种
+    var getServerStuff = ajaxCall;
+
+    // 上边两种等价的原因
+    // 这行
+    return ajaxCall(function (json) {
+      return callback(json);
+    });
+    // 等价于这行
+    return ajaxCall(callback);
+    // 那么重构下getServerStuff
+    var getServerStuff = function (callback) {
+      return ajaxCall(callback);
+    }
+    // 就等于
+    var getServerStuff = ajaxCall;
+    // 以上才是写函数的正确方式。
+
+    /* ***********为何钟爱一等公民函数************ */
+    httpGet('/post/2', function (json) {
+      return renderPost(json);
+    })
+    // 如果把引用里的所有httpGet都增加一个err参数,则会导致所有用到的都需要增加
+    httpGet('/post/2', function (json, err) {
+      return renderPost(json, err);
+    })
+    // 写成一等公民函数的形式
+    httpGet('/post/2', renderPost); // renderPost将会在httpGet中调用，想要多少参数都可以
+
+    /*
+    项目中常见的一种造成混淆的原因是，针对同一个概念使用不同的命名。
+    */
+    // 只针对当前的博客
+    var validArticles = function(articles) {
+      return articles.filter(function(articles) {
+        return article !== null && article !== undefined;
+      });
+    }
+
+    // 对未来的项目友好太多
+    var compact = function(xs) {
+      return xs.filter(function(x) {
+        return x !== null && x !== undefined;
+      })
+    }
+    // 在命名的时候，我们特别容易把自己限定在特定的数据上，
+    // 这种现象很常见，这个例子汇总就是articles,(要避免)
+
+    /* *************要特别小心this************** */
+    var fs=require('fs');
+    // 太可怕了
+    fs.readFile('freaky_friday.txt',Db.save);
+    //好一点点
+    fs.readFile('freaky_friday.txt',Db.save.bind(Db));
+    // 把Db绑定（bind）到它自己身上以后，你就可以随心所欲地调用它的原型链式垃圾代码了。
+    // this就像一块脏尿布，我尽可能地避免使用它，因为在函数式编程中根本用不到它。
+  </script>
+</body>
+
+</html>
