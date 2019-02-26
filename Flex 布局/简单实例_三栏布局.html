@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>简单实例_三栏布局</title>
+</head>
+
+<body>
+  <div class="container">
+    <div class="center">center</div>
+    <div class="left">left</div>
+    <div class="right">right</div>
+  </div>
+</body>
+<style>
+  .center {
+    height: 150px;
+    background: blue;
+  }
+
+  .left {
+    height: 150px;
+    width: 100px;
+    background: red;
+  }
+
+  .right {
+    width: 200px;
+    height: 150px;
+    background: green;
+  }
+
+  /* 将容器设置为 flex 布局 */
+  .container {
+    display: flex;
+  }
+
+  /* 改变 left 的顺序 */
+  .left {
+    order: -1;
+  }
+
+  /* 将 center 占满整个剩余空间 */
+  .center {
+    flex-grow: 1;
+  }
+</style>
+
+</html>

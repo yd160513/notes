@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>项目属性</title>
+</head>
+
+<body>
+  <div class="container">
+    <div class="item">项目1</div>
+    <div class="item">项目2</div>
+    <div class="item">项目3</div>
+    <div class="item">项目4</div>
+  </div>
+  <!-- 
+    每一个项目设置的属性：
+      order: 定义了项目的排列顺序，默认值为 0, 数值越小，排列越靠前
+      flex-grow
+      flex-shrink
+      flex-basis
+      flex
+      align-self
+  -->
+</body>
+
+<style>
+  .item {
+    /* 
+      order: <integer> 项目的排列顺序，默认值为 0，数值越小，排列越靠前
+     */
+    order: -1;
+
+    /* 
+      flex-grow: <number> 项目的放大比例，针对剩余空间，默认值为 0，即即使存在剩余空间，也不会放大，属性值越大占用剩余空间越大
+                 如果所有项目的 flex-frow 都为 1，则所有项目平分剩余空间，
+                 如果其中某个项目的 flex-grow 为 2，其余项目的 flex-grow 为 1，则前者占据的剩余空间比其他项目多一倍
+     */
+    flex-grow: 1;
+
+    /* 
+      flex-shrink: <positive number> 定义了项目的缩小比例，默认为 1，即当空间不足时，项目会自动缩小。
+                   如果所有项目的 flex-shrink 都为 1，当空间不足时，所有项目都将等比缩小；
+                   如果其中一个项目的 flex-shrink 为 0，其余都为 1，当空间不足时，flex-shrink 为 0 的不缩小；
+     */
+    flex-shrink: 1;
+
+    /* 
+      flex-basis: <length> | auto；定义了再分配多余的空间之前，项目占据的主轴空间，默认值为 auto，即项目原来的大小。
+                  项目会根据这个属性来计算主轴是否有多余的空间。
+                  flex-basis 的设置跟 width 或 height 一样，可以是像素/百分比。设置了 flex-basis 之后，
+                  它的优先级比 width / height 高。
+     */
+    flex-basis: 100px;
+
+    /* 
+      flex: flex-grow、flex-shrink、flex-basis 的缩写，默认值是 0 1 auto，后两个属性可选。
+            该属性有两个快捷值： auto (1 1 auto) 和 none (0 0 auto)。
+            auto 代表在需要的时候可以拉伸也可以收缩，
+            none 表示既不能拉伸也不能收缩。
+     */
+
+    /* 
+      align-self: 用来定义单个项目与其他项目不一样的对齐方式，可以覆盖 align-items 属性。默认属性值是 auto，
+                  即集成父元素的 align-items 属性值。当没有父元素时，它的表现得等同于 stretch。
+                  align-self 的六个可能属性值，除了 auto 之外，其他的表现和 align-items 一样。
+     */
+    align-self: auto;
+  }
+</style>
+
+</html>

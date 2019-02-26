@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>浏览器兼容性及总结</title>
+</head>
+
+<body>
+<!-- 
+  设置为 flex 布局后，子元素的 float、clear、vertical-align 属性都将失效。
+
+  flex 布局的新旧语法：
+    display: box; 2009 version 老语法
+    display: flexbox; 2011 version 过渡语法
+    display: flex | inline-flex; 2012 version 新语法
+  语法支持情况：
+    Chrome 29+ 
+    Firefox 28+
+    Safari 9+
+    iOS Safari 9+
+    Android 4.4+
+    IE Mobile 11+
+  兼容性写法：
+    display: -webkit-box;      /* 老语法 iOS 6-, Safari 3.1-6 */
+    display: -moz-box;         /* 老语法 Firefox 19- */
+    display: -ms-flexbox;      /* 过渡语法 IE 10 */
+    display: -webkit-flex;     /* 新语法 Chrome */
+    display: flex;             /* 新语法, Spec - Opera 12.1, Firefox 20+ */
+ -->
+</body>
+
+</html>
