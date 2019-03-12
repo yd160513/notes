@@ -16,7 +16,7 @@ import './mock'
 
 import '@/styles/index.scss'
 
-Vue.use(Element);
+Vue.use(Element); // 为了使用模块化机制编程
 
 Vue.config.productionTip = false
 
