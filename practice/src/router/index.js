@@ -1,3 +1,13 @@
+
+/**
+ * 
+ * 编写路由步骤：
+ *  1. 在 main.js 中引入 router.js 挂载到 Vue 实例中
+ *  2. 配置路由实例：在 route.js 中引入 Vue、vue-router、配置路由实例
+ *  3. 组件内配置：就是配置 router-link 、router-view
+ * 
+ */
+
 import Vue from 'vue'
 import Router from 'vue-router'
 
@@ -26,11 +36,13 @@ import ShoppingCart from '@/view/shoppingCart'
  * 
  * $router 和 $route 的区别：
  * $router: 指的是整个路由实例，可以操控整个路由，通过 '$router.push' 往其中添加任意路由对象
- * 
+ * $route: 指当前路由实例（'router'）跳转到的路由对象
+ * 路由实例可以包含多个路由对象，它们是父子关系
+ * reoutes: 指 router 路由实例的 routes API. 用来配置多个 route 路由对象
  */
 
 
-Vue.use(Router)
+Vue.use(Router) // 加载全局组件 Router
 
 export const constantRouterMap = [{
     path: '/login',
@@ -140,8 +152,9 @@ export const asyncRouterMap = [{
   component: Layout,
   children: [{
     path: 'index',
-    component: roleTestPage,
-    name: '权限测试页',
+    // component: roleTestPage, // import 的组件，这是正常加载
+    component: resolve => require(['@/components/super_editor'], resolve), // 使用懒加载可以减少首页加载时间，此时不需要 import
+    name: '权限测试页', // 路由命名，name 要唯一
     meta: {
       role: ['admin', 'super_editor']
     } // noCache: 页面不会被缓存，默认false
@@ -149,5 +162,7 @@ export const asyncRouterMap = [{
 }];
 
 export default new Router({
+  // mode: 'history', // 路由模式： 默认为 hash，如果改为 history，需要后端配合
+  // base: '/', // 基路径：默认值为 '/'， 如果整个单页应用在 /app/ 下，base 就应该设为 '/app', 一般可以写成 __dirname, 在 webpack 中配置
   routes: constantRouterMap // 可以传入其他参数
 })
