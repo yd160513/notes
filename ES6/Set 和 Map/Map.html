@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Map</title>
+</head>
+
+<body>
+  <script>
+    /*
+      Map 的特点；
+        1. 传统的 Object 的 key 只能是字符串，但是 Map 的可以使各种数据类型
+        2. 可以接收一个数组作为参数，该数组的成员是一个个表示键值对的数组
+           不仅仅是数组，任何具有 Iterator 接口、且每个成员都是一个双元素的数组的数据结构都可以当做 Map 构造函数的参数 Set 和 Map都可以用来生成新的 Map
+        3. 对同一个键多次复制，后面的值将覆盖前面的值；读取一个未知的键，返回 undefined
+        4. 只有对同一个对象的引用，map 结构才将其视为同一个键；同样的值得两个实例，在 Map 结构中被视为两个键
+        5. 由第四条可知，Map 的键是跟内存地址绑定的，只要内存地址不一样就视为两个键。
+           这就解决了同名属性碰撞的问题，扩展别人的库时，如果使用对象作为键名，就不用担心自己的属性与原作者的属性同名
+        6. 如果 Map 的键是一个简单类型的值（数字，字符串，布尔值），则只要两个值严格相等，Map 将其视为一个键，
+           比如 0 和 -0 就是一个键，布尔值 true 和字符串 true 则是两个不同的键，undefined 和 null 也是两个不同得键，
+           虽然 NaN 不严格等于自身，但 Map 将其视为同一个键。
+      Map 的属性:
+        1. size
+      Map 的操作方法：
+        1. set(key, value)
+        2. get(key)
+        3. has(key)
+        4. delete(key)
+        5. clear()
+      Map 的遍历方法：
+        1. keys()
+        2. values()
+        3. entries()
+        4. forEach()
+    */
+
+    // 传统的 Object 的 key 只能是字符串，但是 Map 的可以使各种数据类型
+    const m = new Map();
+    const o = {p: 'hello map'}
+    m.set(o, 'content')
+    console.log(m.get(o)); // content
+
+    // 可以接收一个数组作为参数，该数组的成员是一个个表示键值对的数组
+    const map = new Map([
+      ['name', '张三'],
+      ['title', 'author']
+    ])
+    console.log(map) // {"name" => "张三", "title" => "author"}
+
+    // 不仅仅是数组，任何具有 Iterator 接口、且每个成员都是一个双元素的数组的数据结构都可以当做 Map 构造函数的参数 Set 和 Map都可以用来生成新的 Map
+    const set = new Set([
+      ['foo', 1],
+      ['bar', 2]
+    ])
+    const m1 = new Map(set);
+    console.log(m1); //  {"foo" => 1, "bar" => 2}
+
+    // 只有对同一个对象的引用，map 结构才将其视为同一个键；
+    map.set(['a'], 555);
+    console.log(map.get(['a'])); // undefined 因为两个对象的内存地址不一样，所以无法读取该键
+
+    // 同样的值得两个实例，在 Map 结构中被视为两个键
+    const k1 = ['a'];
+    const k2 = ['a'];
+    map.set(k1, 111).set(k2, 222)
+    console.log(map.get(k1)); // 111
+    console.log(map.get(k2)); // 222
+
+  </script>
+</body>
+
+</html>
