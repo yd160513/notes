@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>函数参数是对象类型</title>
+</head>
+
+<body>
+  <script>
+    function test(person) {
+      person.age = 18;
+      person = {
+        name: 'kyd',
+        age: 20
+      }
+      return person;
+    }
+    const p1 = {
+      name: '111',
+      age: 19
+    }
+    const p2 = test(p1);
+    console.log(p1); // 111 18
+    console.log(p2); // kyd 20
+  </script>
+</body>
+
+</html>
