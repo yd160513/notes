@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>async await</title>
+</head>
+
+<body>
+  <script>
+    let a = 0;
+    let b = async () => {
+      a = a + await 10; // 执行到这里会先去执行同步的代码，然后将 await 10 封装成 Promise.reslove(返回值)，执行完同步的再回来执行这里
+      console.log('函数里的2', a);
+    }
+    b();
+    a++;debugger
+    console.log('函数外的1', a);
+  </script>
+</body>
+
+</html>
