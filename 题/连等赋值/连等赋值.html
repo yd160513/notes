@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>连等赋值</title>
+</head>
+<body>
+  <script>
+    var a = {n: 1};
+    var b = a;
+    
+    /*
+      可以这样理解：
+        1. 先将 a.x 中 a 的地址和 a 的地址都取出来，此时都为 {n: 1}
+        2. 创建一个 {n: 2}
+        3. 将 {n: 2} 赋值给 a， 此时 a 的地址就指向了 {n: 2 }
+        4. a.x = a 这一部，a.x 的 a 还保留了之前的 {n: 1}, 所以 a.x = a 是将 a 赋值给了原来的对象({n: 1}), 最终使原来的 {n: 1} 变成了 {n: 1, x: {n: 2}}
+        5. 执行完之后 a 原来指向 {n: 1} 的地址已经更改成了 {n: 2}, 也就是原来的对象已经没有东西引用他了，也就意味着被垃圾回收
+        6. 改变 a 的同时也就是在改变着 b ， 
+        7. 所以 b.x = {n: 2}  a.x = undefined
+    */
+    a.x = a = {n: 2};
+
+    console.log('a.x: ' + a.x); // undefined
+    console.log(b);
+    console.log(b.x); // {n: 2}
+  </script>
+</body>
+</html>
