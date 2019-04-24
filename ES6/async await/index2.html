@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>async await</title>
+</head>
+
+<body>
+  <script>debugger
+    console.log('script start')
+
+    async function async1() {
+      await async2() // 执行到这里的时候 await 先是等待到了一个 promise.resolve(undefined) 但是这里并不是结果，因为调用完 resolve 之后需要在 .then 中才能拿到结果
+                     // 第一次将 promise.resolve(undefined) 推入任务队列，第二次(调用 resolve )才将处理结果拿到并作为参数传给下一次的 .then，然后让出线程。第三次执行 .then 之后得到 async2 end
+                     // https://mp.weixin.qq.com/s/mT5XvdMnlw0Qt8EBvgDtYQ
+                     // https://segmentfault.com/q/1010000016147496
+                     // chrome 73 的读取规则进行了一些变化 await 的读取更快了一些， https://segmentfault.com/q/1010000016147496
+      console.log('async1 end')
+    }
+    async function async2(){
+      console.log('async2 end')
+    }
+    async1()
+
+    setTimeout(function() {
+      console.log('setTimeout')
+    }, 0)
+
+    new Promise(resolve => {
+      console.log('Promise')
+      resolve()
+    })
+    .then(function() {
+      console.log('promise1')
+    })
+    .then(function() {
+      console.log('promise2')
+    })
+
+    console.log('script end')
+  </script>
+</body>
+
+</html>
