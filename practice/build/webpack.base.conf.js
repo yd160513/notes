@@ -26,6 +26,8 @@ module.exports = {
   },
   output: {
     path: config.build.assetsRoot,
+
+    // 生成的 js 文件名称
     filename: '[name].js',
     
     // 把组件按组分块

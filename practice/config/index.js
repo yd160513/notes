@@ -47,9 +47,11 @@ module.exports = {
     // Template for index.html
     index: path.resolve(__dirname, '../dist/index.html'),
 
-    // Paths
+    // Paths 打包文件输出目录
     assetsRoot: path.resolve(__dirname, '../dist'),
     assetsSubDirectory: 'static',
+
+    // 资源引用路径
     assetsPublicPath: '/',
 
     /**
