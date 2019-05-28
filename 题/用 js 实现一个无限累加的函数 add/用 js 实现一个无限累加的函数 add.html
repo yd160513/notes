@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>用 js 实现一个无限累加的函数 add</title>
+</head>
+
+<body>
+  <script>debugger
+    function add(a) {
+      function sum(b) {
+        a = a + b;
+        // return a; // 这里不可以写成 return a; 因为在有三个以上值得时候还需要调用 sum ，所以每次只能放到 toString 中 return a
+        return sum;
+      }
+      sum.toString = function() {
+        return a;
+      }
+      return sum;
+    }
+    
+    console.log(add(1))
+    console.log(add(1)(2))
+    console.log(add(1)(2)(3))
+  </script>
+</body>
+
+</html>
