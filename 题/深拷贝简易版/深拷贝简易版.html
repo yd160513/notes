@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>深拷贝简易版</title>
+</head>
+
+<body>
+  <script>
+    
+    /*
+      1. 先判断是不是对象，不是对象则抛异常
+      2. 看这个对象是数组还是对象，然后将其浅拷贝到新的变量中那个
+      3. 拿到新的变量中所有的 key 并遍历，遍历过程中去和原对象中相同的 key 所对应的值作对比，
+         如果是对象则进行递归，如果不是则直接将其赋值给新对象中相同的 key 所对应的值
+    */
+
+    function deepClone(obj) {
+      function isObject(o) {
+        return (typeof o === 'object' || typeof o === 'function') && o !== null
+      }
+
+      if (!isObject(obj)) {
+        return new Error('非对象')
+      }
+
+      let isArray = Array.isArray(obj)
+      let newObj = isArray ? [...obj] : { ...obj }
+      // Reflect.ownKeys 对象中的 key 组成的数组
+      Reflect.ownKeys(newObj).forEach(key => {
+        newObj[key] = isObject(obj[key]) ? deepClone(obj[key]) : obj[key]
+      })
+      return newObj;
+    }
+    let obj = {
+      a: [1, 2, 3],
+      b: {
+        c: 2,
+        d: 3
+      }
+    }
+    let newObj = deepClone(obj)
+    console.log(newObj)
+    newObj.b.c = 1;
+    console.log(obj.b.c)
+  </script>
+</body>
+
+</html>

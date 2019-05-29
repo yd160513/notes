@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>组合继承</title>
+</head>
+
+<body>
+  <script>debugger
+    function Parent(val) {
+      this.val = val
+    }
+    Parent.prototype.getValue = function() {
+      console.log(this.val)
+    }
+    function Child(value) {
+      // 执行 Parent , 将 this 传给 Parent，所以 Parent 的 this 指向了 child 
+      Parent.call(this, value)
+    }
+    Child.prototype = new Parent();
+
+    // this 绑定到 Child
+    const child = new Child(1)
+    child.getValue()
+  </script>
+</body>
+
+</html>
