@@ -10,6 +10,12 @@
 
 <body>
   <script>
+
+    /**
+      由于 promise 的状态只能更改一次，所以先 then 之后无法更改状态
+      .then(() => { promise.then(); resolve() // 这里的 resolve() 无法执行，因为在前边已经更改了 })    
+    */
+
     const PENDING = 'pending'
     const RESOLVED = 'resolved'
     const REJECTED = 'rejected'
