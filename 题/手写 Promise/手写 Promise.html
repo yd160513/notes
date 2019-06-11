@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>手写 Promise</title>
+</head>
+
+<body>
+  <script>
+    const PENDING = 'pending'
+    const RESOLVED = 'resolved'
+    const REJECTED = 'rejected'
+
+    function MyPromise(fn) {
+      // 因为函数可能会异步执行，用于获取争取的 this 对象
+      const that = this;
+      // 初始状态
+      that.state = PENDING;
+      // 用于保存 resolve 或者 rejecte 中传入的值
+      that.value = null;
+      // resolve 时的回调函数集，因为可能有多个回调
+      that.resolvedCallbacks = []
+      // reject 时的回调函数集
+      that.rejectedCallbacks = []
+
+      // 待完善 resolve 和 rejecte 函数
+      function resolve(value) {
+        // 只有 pending 状态才能改变状态
+        if (that.state === PENDING) {
+          // 更改状态
+          that.state = RESOLVED
+          // 成功的值赋给 value
+          that.value = value
+          // 遍历回调函数集并执行
+          that.resolvedCallbacks.map(cb => cb(that.value))
+        }
+      }
+      function reject(value) {
+        if (that.state === PENDING) {
+          that.state = REJECTED
+          that.value = value
+          that.rejectedCallbacks.map(cb => cb(that.value))
+        }
+      }
+      // 待完善执行 fn 函数
+      try { // 因为执行 fn 的过程中可能出错，所以用 try/catch 包起来，在出错之后执行 reject
+        fn(resolve, reject)
+      } catch (e) {
+        reject(e)
+      }
+    }
+
+    // then 函数
+    MyPromise.prototype.then = function (onFulfilled, onRejected) {
+      const that = this
+      // 判断两个参数是否是函数类型，因为是可选参数，如果不是函数需要创建一个函数赋值给对应的参数，同时也实现了透传
+      onFulfilled = typeof onFulfilled === 'function' ? onFulfilled : v => v
+      onRejected = typeof onRejected === 'function' ? onRejected : e => { throw e }
+      // 如果是 pending 就往回调函数中 push 函数 (实例中有一个 setTimeout 函数，这种就会进入 pending 状态)
+      if (that.state === PENDING) {
+        that.resolvedCallbacks.push(onFulfilled)
+        that.rejectedCallbacks.push(onRejected)
+      }
+      // 不是 pending 则执行对应的函数
+      if (that.state === RESOLVED) {
+        onFulfilled(that.value)
+      }
+      if (that.state === REJECTED) {
+        onRejected(that.value)
+      }
+    }
+  </script>
+</body>
+
+</html>
