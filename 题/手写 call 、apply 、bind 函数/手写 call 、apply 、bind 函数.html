@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>手写 call 、apply 、bind 函数</title>
+</head>
+
+<body>
+  <script>
+    /**************************** call *****************************/
+
+    /*
+      需要考虑的点：
+        1. 不传入第一个参数， 默认上下文是 window
+        2. 改变 this 指向，让新的对象可以执行该函数，并能接受参数
+    */
+    Function.prototype.myCall = function (context) { // context 是函数传入的第一个参数
+      // 只能是函数调用
+      if (typeof this !== 'function') {
+        throw new TypeError('Error')
+      }
+      // 不传入第一个参数，默认是 window
+      context = context || window
+      // 谁调用，谁就是 this，将 需要调用的函数赋值给 fn
+      context.fn = this;
+      // 取出除去第一个参数的其余参数 因为 call 的参数是一个一个传的
+      const args = [...arguments].slice(1)
+      // 将参数传入到新的函数中 改变 this 指向
+      const result = context.fn(...args)
+      // 函数已经调用并将结果保存到 result 字段中，所以删除对象上的函数
+      delete context.fn
+      // 将结果返回
+      return result
+    }
+    var obj = {
+      name: '测试'
+    }
+
+    function func(firstName, lastName) {
+      console.log(firstName + ' ' + this.name + ' ' + lastName);
+    }
+
+    func.myCall(obj, 'C', 'D');
+
+    /**************************** apply *****************************/
+
+    // apply 传入的是一个数组
+    Function.prototype.myApply = function (context) {
+      // 不是函数调用就报错
+      if (typeof this !== 'function') {
+        throw new TypeError('Error')
+      }
+      // 第一个参数不传就是 window
+      context = context || window
+      // 定义一个 fn 用来存 this (也就是 谁调用了 myApply)
+      context.fn = this;
+      // 定义一个返回结果
+      let result
+      // 因为 apply 传的是一个数组，所以判断一下有没有第二个参数
+      if (arguments[1]) {
+        result = context.fn(...arguments[1])
+      } else {
+        result = context.fn()
+      }
+      // 删除对象上的函数
+      delete context.fn;
+      return result
+    }
+
+    /**************************** bind *****************************/
+
+    // 传入的是一个数组，返回的是一个函数
+    Function.prototype.myBind = function (context) {
+      if (typeof this !== 'function') {
+        throw new TypeError('Error')
+      }
+      const _this = this;
+      const args = [...arguments].slice(1)
+      // 返回一个函数
+      return function F() {
+        // 有两种调用方式
+        // 1. new 的方式调用  不会被任何方式改变 this，所以不用考虑改变 this
+        if (this instanceof F) {
+          return new _this(...args, ...arguments)
+        } else {
+          // 2. 直接调用  因为 bind 可以实现类似 f.bind(obj, 1)(2) 这样的代码，所以需要将参数拼接起来
+          return _this.apply(context, args.concat(...arguments))
+        }
+      }
+    }
+  </script>
+</body>
+
+</html>
