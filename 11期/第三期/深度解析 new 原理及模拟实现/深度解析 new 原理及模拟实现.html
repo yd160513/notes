@@ -44,7 +44,7 @@
     function created() {
       // 创建一个新对象
       var obj = new Object();
-      // 获得构造函数，arguments中去除第一个参数
+      // 获得构造函数，arguments中去除第一个参数，并返回去除的这个参数
       Con = [].shift.call(arguments);
       // 链接到原型，obj可以访问到构造函数原型中的属性
       obj.__proto__ = Con.prototype;
@@ -62,20 +62,30 @@
       所以需要判断下返回值是不是一个对象，如果是对象那个则返回这个对象，不然返回新创建的obj对象
     */
     // 模拟实现第二部
-    function created() {
+    function create() {
       // 创建一个新对象
       var obj = new Object();
-      // 获得构造函数，arguments中去除第一个参数
+      // 获得构造函数，arguments中去除第一个参数 (Car 函数)，之后 arguments 就只剩下除去第一个参数之后的其余参数
       Con = [].shift.call(arguments);
       // 链接到原型，obj可以访问到构造函数原型中的属性
       obj.__proto__ = Con.prototype;
       // 绑定this实现继承，obj可以访问到构造函数中的属性
       var ret = Con.apply(obj, arguments);
       // 优先返回构造函数返回的对象
-      return typeof ret === 'object' ? ret : obj;
+      return ret instanceof Object ? ret : obj;
     }
 
-    
+    function Car1(color) {
+      this.color = color;
+    }
+    Car1.prototype.start = function () {
+      console.log(this.color + " car start");
+    }
+
+    var car1 = create(Car1, "black");
+    console.log(car1.color);
+
+    car1.start();
 
 
   </script>

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>手写 new</title>
+</head>
+
+<body>
+  <script>
+    /*
+      1. 新生成一个对象
+      2. 链接到原型
+      3. 绑定 this
+      4. 返回新对象
+    */
+    function create() {
+      // 1. 新生成一个对象
+      let obj = {}
+      // 2. 链接到原型
+      // 2.1 取出参数中的第一个参数
+      let firstArg = [].shift.call(arguments)
+      // 2.2 链接到原型
+      obj.__proto__ = firstArg.prototype
+      // 3. 绑定 this
+      let result = con.apply(obj, arguments)
+      // 4. 返回新对象
+      return result instanceof Object ? result : obj;
+    }
+    let o = create 
+  </script>
+</body>
+
+</html>
