@@ -147,19 +147,19 @@ export const constantRouterMap = [{
   }
 ];
 
-export const asyncRouterMap = [{
-  path: '/super_editor',
-  component: Layout,
-  children: [{
-    path: 'index',
-    // component: roleTestPage, // import 的组件，这是正常加载
-    component: resolve => require(['@/components/super_editor'], resolve), // 使用懒加载可以减少首页加载时间，此时不需要 import
-    name: '权限测试页', // 路由命名，name 要唯一
-    meta: {
-      role: ['admin', 'super_editor']
-    } // noCache: 页面不会被缓存，默认false
-  }]
-}];
+// export const asyncRouterMap = [{
+//   path: '/super_editor',
+//   component: Layout,
+//   children: [{
+//     path: 'index',
+//     // component: roleTestPage, // import 的组件，这是正常加载
+//     component: resolve => require(['@/components/super_editor'], resolve), // 使用懒加载可以减少首页加载时间，此时不需要 import
+//     name: '权限测试页', // 路由命名，name 要唯一
+//     meta: {
+//       role: ['admin', 'super_editor']
+//     } // noCache: 页面不会被缓存，默认false
+//   }]
+// }];
 
 export default new Router({
   // mode: 'history', // 路由模式： 默认为 hash，如果改为 history，需要后端配合
