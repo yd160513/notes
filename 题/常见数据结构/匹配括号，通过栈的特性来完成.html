@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>匹配括号，通过栈的特性来完成</title>
+</head>
+
+<body>
+  <script>
+    /**
+      示例 1:
+      输入: "()"
+      输出: true
+
+      示例 2:
+      输入: "()[]{}"
+      输出: true
+
+      示例 3:
+      输入: "(]"
+      输出: false
+
+      示例 4:
+      输入: "([)]"
+      输出: false
+
+      示例 5:
+      输入: "{[]}"
+      输出: true
+    */
+    var isValid = function (s) {
+      let map = {
+        '(': -1,
+        ')': 1,
+        '[': -2,
+        ']': 2,
+        '{': -3,
+        '}': 3
+      }
+      let stack = []
+      for (let i = 0; i < s.length; i++) {
+        // 小于 0 的都是左括号
+        if (map[s[i]] < 0) {
+          stack.push(s[i])
+        } else {
+          let last = stack.pop();
+          // 正常来说 左括号 + 有括号 = 0
+          if (map[last] + map[s[i]] != 0) return false
+        }
+      }
+      if (stack.length > 0) return false
+      return true;
+    }
+    console.log(isValid('()'))
+  </script>
+</body>
+
+</html>

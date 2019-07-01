@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>双向数据绑定</title>
+</head>
+
+<body>
+
+  <div id="app">
+    <h2>{{title}}</h2>
+    <input v-model="name">
+    <h1>{{name}}</h1>
+    <button v-on:click="clickMe">click me!</button>
+  </div>
+
+  <script>
+
+    /**
+      vue 原理：
+        数据劫持 结合 发布者-订阅者 模式，
+        通过 Object.defineProperty() 来劫持各个属性的 setter, gettter, 
+        在数据变动是发布消息给订阅者，触发相应的监听回调
+      实现 mvvm 的双向绑定，要实现以下几点：
+        1. 实现一个数据监听器 Observer, 能够对数据对象的所有属性进行监听，如有变动可拿到最新值并通知订阅者
+        2. 实现一个指令解析器 Compile, 对每个元素节点的执行进行扫描和解析，根据指令模板替换数据，以及绑定相应的更新函数
+        3. 实现一个 Watcher, 作为连接 Obsever 和 Compile 的桥梁，能够订阅并收到每个属性变动的通知，执行指令绑定的相应回调函数，从而更新视图
+        4. mvvm 入口函数，整合以上三者
+
+        以上流程：
+        1. new MVVM() 通过 Observer 劫持监听所有属性，向 Dep 通知变化，Dep 再向 Watcher 通知变化，Watcher 先向 Dep 添加订阅者，同时通知 Updater 更新视图
+        2. new MVVM() 通过 Compile 解析指令，首先向 Watcher 订阅数据变化，绑定更新函数；同时如果当前状态是初始化，则通知 Updater 初始化视图
+    */
+
+    /***************************************** 实现 Observer *****************************************/
+
+    /**
+      将需要 observe 的数据对象进行递归遍历，包括子属性对象的属性，都加上 getter 和 setter
+    */
+
+    function observe(data) {
+      if (!data || typeof data !== 'object') {
+        return;
+      }
+      // 取出所有属性遍历
+      Object.keys(data).forEach(function (key) {
+        defineReactive(data, key, data[key]);
+      })
+    }
+
+    function defineReactive(data, key, val) {
+      // 订阅者列表
+      var dep = new Dep();
+      observe(val) // 监听子属性
+      Object.defineProperty(data, key, {
+        enumerable: true, // 可枚举
+        configurable: false, // 不能再 define
+        get: function () {
+          // 确定的 订阅者 是 Watcher ，而 dep 在 defineReactive 方法内部，所以想通过 dep 添加订阅者需要在方法内操作
+          // 将 dep 添加一个订阅者设计在 getter 中，是为了让 Watcher 初始化进行触发
+          Dep.target && dep.addSub(Dep.target)
+          console.log(`get`)
+          return val;
+        },
+        set: function (newVal) {
+          if (val === newVal) return;
+          console.log(`${val} ==> ${newVal}`)
+          val = newVal;
+          dep.notify() // 通知所有订阅者
+        }
+      })
+    }
+
+    function Dep() {
+      this.subs = [];
+    }
+
+    Dep.prototype = {
+      addSub: function (sub) {
+        this.subs.push(sub)
+      },
+      notify: function () {
+        this.subs.forEach(sub => {
+          sub.update()
+        })
+      }
+    }
+
+    var data = { name: '测试' }
+    observe(data);
+    data.name = '继续测试'
+
+    /***************************************** 实现 Compile *****************************************/
+
+    // compile 主要的事情是解析模板指令，将模板中的变量替换成数据，然后初始化渲染页面视图，并将每个指令对应的节点绑定更新函数，
+    // 添加监听数据的订阅者，一旦数据有变动，收到通知，更新视图
+    function Compile(el, vm) {
+      this.$vm = vm;
+      this.$el = this.isElementNode(el) ? el : document.querySelector(el);
+      if (this.$el) {
+        this.$fragment = this.node2Fragment(this.$el);
+        this.init();
+        this.$el.appendChild(this.$fragment)
+      }
+    }
+
+    Compile.prototype = {
+      init: function () {
+        // 遍历所有节点及其子节点，进行扫描解析编译，调用对应的指令渲染函数进行数据渲染，并调用对应的指令更新函数进行绑定
+        this.compileElement(this.$fragment)
+      },
+      node2Fragment: function (el) {
+        var fragment = document.createDocumentFragment();
+        // 将原生节点拷贝到 fragment
+        while (child = el.firstChild) {
+          fragment.appendChild(child);
+        }
+        return fragment;
+      },
+      compileElement: function (el) {
+        var childNodes = el.childNodes;
+        me = this;
+        [].slice.call(childNodes).forEach(node => {
+          var text = node.textContent;
+          var reg = /\{\{(.*)\}\}/; // 表达式文本 插值表达式 {{}}
+          // 按元素节点方式编译
+          if (me.isElementNode(node)) {
+            me.compile(node);
+          } else if (me.isTextNode(node) && reg.test(text)) {
+            me.compileText(node, RegExp.$1)
+          }
+          // 遍历编译子节点
+          if (node.childNodes && node.childNodes.length) {
+            me.compileElement(node)
+          }
+        })
+      },
+      compile: function (node) {
+        var nodeAttrs = node.attributes;
+        me = this;
+        [].slice.call(nodeAttrs).forEach(attr => {
+          // 规定：指令以 v-xxx 命名
+          var attrName = attr.name;
+          if (me.isDirective(attrName)) {
+            var exp = attr.value; // content
+            var dir = attrName.substring(2); // text
+            if (me.isEventDirective(dir)) {
+              // 事件指令，如：v-on:click
+              compileUtil.eventHandler(node, me.$vm, exp, dir)
+            } else {
+              // 普通指令
+              compileUtil[dir] && compileUtil[dir](node, me.$vm, exp)
+            }
+          }
+        })
+      },
+
+      // compileText: function (node, exp) {
+      //   var self = this;
+      //   var initText = this.vm[exp];
+      //   updateText(node, initText);  // 将初始化的数据初始化到视图中
+      //   new Watcher(this.vm, exp, function (value) {  // 生成订阅器并绑定更新函数
+      //     self.updateText(node, value);
+      //   });
+      // },
+
+      compileText: function (node, exp) {
+        // var self = this;
+        // var initText = this.vm[exp];
+        // updateText(node, initText);  // 将初始化的数据初始化到视图中
+        // new Watcher(this.vm, exp, function (value) {  // 生成订阅器并绑定更新函数
+        //   self.updateText(node, value);
+        // });
+
+        compileUtil.text(node, this.$vm, exp);
+      },
+
+      isDirective: function (attr) {
+        return attr.indexOf('v-') == 0;
+      },
+
+      isEventDirective: function (dir) {
+        return dir.indexOf('on') === 0;
+      },
+
+      isElementNode: function (node) {
+        return node.nodeType == 1;
+      },
+
+      isTextNode: function (node) {
+        return node.nodeType == 3;
+      }
+    }
+
+    // 指令处理集合
+    var compileUtil = {
+      text: function (node, vm, exp) {
+        this.bind(node, vm, exp, 'text')
+      },
+      bind: function (node, vm, exp, dir) {
+        // 触发更新函数
+        var updaterFn = updater[`${dir}Updater`]
+        // 第一次初始化视图
+        updaterFn && updaterFn(node, vm[exp])
+        // 实例化订阅者，此操作会在对应的属性消息订阅器中添加改订阅者 watcher
+        new Watcher(vm, exp, function (value, oldValue) {
+          // 一旦属性值有变化，有收到通知执行此更新函数，更新视图
+          updaterFn && updaterFn(node, value, oldValue)
+        })
+      },
+      // 事件处理
+      eventHandler: function (node, vm, exp, dir) {
+        var eventType = dir.split(':')[1],
+          fn = vm.$options.methods && vm.$options.methods[exp];
+
+        if (eventType && fn) {
+          node.addEventListener(eventType, fn.bind(vm), false);
+        }
+      },
+
+      model: function (node, vm, exp) {
+        this.bind(node, vm, exp, 'model');
+
+        var me = this,
+          val = this._getVMVal(vm, exp);
+        node.addEventListener('input', function (e) {
+          var newValue = e.target.value;
+          if (val === newValue) {
+            return;
+          }
+
+          me._setVMVal(vm, exp, newValue);
+          val = newValue;
+        });
+      },
+
+      _getVMVal: function (vm, exp) {
+        var val = vm;
+        exp = exp.split('.');
+        exp.forEach(function (k) {
+          val = val[k];
+        });
+        return val;
+      },
+
+      _setVMVal: function (vm, exp, value) {
+        var val = vm;
+        exp = exp.split('.');
+        exp.forEach(function (k, i) {
+          // 非最后一个key，更新val的值
+          if (i < exp.length - 1) {
+            val = val[k];
+          } else {
+            val[k] = value;
+          }
+        });
+      }
+    }
+
+    // 更新函数
+    var updater = {
+      textUpdater: function (node, value) {
+        node.textContent = typeof value === 'undefined' ? '' : value;
+      }
+    }
+
+    /***************************************** 实现 Watcher *****************************************/
+
+    /**
+      Watcher 订阅者作为 Observer 和 Compile 之间通信的桥梁，主要的事情是：
+        1. 在自身实例化时往 属性订阅器(dep) 中添加自己
+        2. 自身必须有一个 update() 方法
+        3. 待属性变动 dep.notice() 通知时，能调用自身的 update() 方法，并触发 Compile 中绑定的回调，则功成身退
+    */
+    function Watcher(vm, exp, cb) {
+      this.cb = cb;
+      this.vm = vm;
+      this.exp = exp;
+      // 此处为了触发属性的 getter, 从而在 dep 添加自己，结合 Observer 更容易理解
+      this.value = this.get();
+    }
+    Watcher.prototype = {
+      update: function () {
+        this.run(); // 属性值变化收到通知
+      },
+      run: function () {
+        var value = this.get(); // 取到最新值
+        var oldValue = this.value;
+        if (value !== oldValue) {
+          this.value = value;
+          this.cb.call(this.vm, value, oldValue); // 执行 Compile 中绑定的回调，更新视图
+        }
+      },
+      get: function (exp) {
+        // 将当前订阅者指向自己，
+        //  标记订阅者是当前 Watcher 实例，强行触发属性定义的 getter 方法，
+        // getter 方法执行的时候就会在属性订阅器 dep 添加当前 watcher 实例，从而在属性值有变化的时候，监听实例就能收到更新通知
+        Dep.target = this;
+        var value = this.vm[this.exp]; // 触发 getter, 添加自己到属性订阅器中
+        Dep.target = null; // 添加完之后，重置
+        return value;
+      }
+    }
+
+    /***************************************** 实现 MVVM *****************************************/
+
+    /**
+      实现：
+        整合 Observer, Compile, Wathcer 三者，通过 Observer 来监听自己的 model 数据变化，通过 Compile 来解析模板指令，
+        最终利用 Watcher 搭起 Observer 和 Compile 之间的通信桥梁，达到数据变化 -> 视图更新; 视图交互变化(input) -> 数据 model 变更的双向绑定效果
+      问题：
+       在代码中监听的是 vm.data.name... 但是希望的是 vm.name, 所以需要给加一个属性访问代理
+    */
+    function MVVM(options) {
+      this.$options = options;
+      var data = this._data = this.$options.data;
+      me = this;
+      Object.keys(data).forEach(key => {
+        // 增加属性访问代理
+        me._proxy(key);
+      })
+      observe(data, this.data)
+      this.$compile = new Compile(options.el || document.body, this)
+    }
+
+    MVVM.prototype = {
+      _proxy: function (key) {
+        var me = this;
+        Object.defineProperty(me, key, {
+          configurable: false,
+          enumerable: true,
+          get: function proxyGetter() {
+            return me._data[key];
+          },
+          set: function proxySetter(newVal) {
+            me._data[key] = newVal;
+          }
+        })
+      }
+    }
+
+
+
+    new MVVM({
+      el: '#app',
+      data: {
+        title: 'hello world',
+        name: 'canfoo'
+      },
+      methods: {
+        clickMe: function () {
+          this.title = 'hello world111111111111';
+        }
+      },
+      mounted: function () {
+        window.setTimeout(() => {
+          this.title = '你好';
+        }, 1000);
+      }
+    });
+
+  </script>
+</body>
+
+</html>
