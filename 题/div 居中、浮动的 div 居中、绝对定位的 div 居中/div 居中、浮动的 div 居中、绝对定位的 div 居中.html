@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>div 居中、浮动的 div 居中、绝对定位的 div 居中</title>
+</head>
+
+<body>
+  <!-- <div class="other">
+    <div class="inner">12312</div>
+  </div>
+  <div class="box">这是一个div</div> -->
+  <!-- <div class="outer">
+    <div class="inner-float" style="float: left; width: 200px; border: 1px solid blue;">浮动元素</div>
+  </div> -->
+  <!-- <div class="outer1">
+    <div class="inner-float1" style="float: left; width: 200px; border: 1px solid red;">浮动元素1</div>
+  </div> -->
+  <div class="outer2">
+    <div class="inner-absolute" style="position: absolute;">我是要居中的浮动元素</div>
+  </div>
+  <div class="outer2-1">
+    <div style="position: absolute;">我是要居中的浮动元素</div>
+  </div>
+</body>
+<style>
+  .outer2-1 {
+    display: flex;
+    justify-content: center;
+  }
+
+  .outer2 {
+    position: relative;
+  }
+
+  .inner-absolute {
+    left: 50%;
+    transform: translateX(-50%)
+  }
+
+  .outer1 {
+    display: flex;
+    justify-content: center;
+  }
+
+  .outer {
+    float: left;
+    position: relative;
+    left: 50%;
+  }
+
+  .inner-float {
+    position: relative;
+    left: -50%;
+  }
+
+  /* .box {
+    border: 1px solid red;
+    margin: 0 auto;
+    width: 100px;
+  }
+
+  .other {
+    border: 1px solid red;
+    display: flex;
+    justify-content: center
+  }
+
+  .inner {
+    border: 1px solid blue;
+  } */
+</style>
+
+</html>

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>数组去重</title>
+</head>
+
+<body>
+  <script>
+    // function unique(array) {
+    //   let res = [];
+    //   for(let i = 0, len = array.length; i < len; i++) {
+    //     let temp = array[i]
+    //     if (!res.includes(temp)) {
+    //       res.push(temp)
+    //     }
+    //   }
+    //   return res;
+    // }
+
+    // function unique(array) {
+    //   return[...new Set(array)]
+    // }
+    
+    function unique(array) {
+      const arrMap = new Map()
+      return array.filter((a, i) => {
+        return !arrMap.has(a) && arrMap.set(a)
+      })
+    }
+    let arr = [1, 1, 1, 1, 1, 1, 2, 2, 3, 4, 5];
+    console.log(unique(arr))
+  </script>
+</body>
+
+</html>

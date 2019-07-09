@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>截取 URL 中的参数并返回</title>
+</head>
+
+<body>
+  <script>
+    let url = 'https://test/123?a=1&b=2'
+    function getParams(url) {
+      const paramsStr = url.split('?')[1]
+      const paramsArr = paramsStr.split('&')
+      const params = {}
+      for (let i = 0, len = paramsArr.length; i < len; i++) {
+        let arg = paramsArr[i].split('=')
+        params[arg[0]] = arg[1]
+      }
+      return params
+    }
+    console.log(getParams(url))
+  </script>
+</body>
+
+</html>

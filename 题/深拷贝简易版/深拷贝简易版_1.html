@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>深拷贝简易版</title>
+</head>
+
+<body>
+  <script>
+
+    /**
+      1. 不是对象直接抛异常
+      2. 如果是数组结构数组，如果是对象结构对象
+      3. 根据 key 去取源数组/对象中的值赋值到新对象中
+    */
+    function clone(obj) {
+      function isObj(obj) {
+        return obj && (typeof obj === 'object' || typeof o === 'function')
+      }
+      if (!isObj(obj)) {
+        throw new Error('非对象')
+      }
+      let isArray = Array.isArray(obj)
+      let newObj = isArray ? [...obj] : { ...obj }
+      // Reflect.ownKeys 等同于 Object.getOwnPropertyNames + Object.getOwnPropertySymbols
+      Reflect.ownKeys(newObj).forEach(key => {
+        newObj[key] = isObj(obj[key]) ? clone(obj[key]) : obj[key]
+      })
+      return newObj;
+    }
+    let obj = {
+      a: [1, 2, 3],
+      b: {
+        c: 2,
+        d: 3
+      }
+    }
+    let newObj = clone(obj)
+    newObj.b.c = 1
+    console.log(obj.b.c) // 2
+
+  </script>
+</body>
+
+</html>
