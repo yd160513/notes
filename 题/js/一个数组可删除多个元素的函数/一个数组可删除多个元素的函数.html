@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>一个数组可删除多个元素的函数</title>
+</head>
+
+<body>
+  <script>
+    /**
+      array: 原数组
+      removeArr: 删除的项
+    */
+    function remove(array, removeArr) {
+      for (let i = 0, len = array.length; i < len; i++) {
+        for (let k = 0, leng = removeArr.length; k < leng && k <= leng; k++) {
+          if (array.includes(removeArr[k])) {
+            array.splice(i, 1)
+          }
+        }
+      }
+      return array;
+    }
+    let array = [1, 2, 3, 4, 5];
+    let removeArr = [1, 2];
+    console.log(remove(array, removeArr))
+  </script>
+</body>
+
+</html>

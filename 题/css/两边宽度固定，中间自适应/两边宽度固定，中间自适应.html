@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>两边宽度固定，中间自适应</title>
+</head>
+
+<body>
+  <div class="box">
+    <div class="left"></div>
+    <div class="center"></div>
+    <div class="right"></div>
+  </div>
+</body>
+<style>
+  .box,
+  .center,
+  .left,
+  .right {
+    height: 200px;
+  }
+
+  .center {
+    border: 1px solid blue;
+    width: 100%;
+    margin: 0 10px
+  }
+
+  .left,
+  .right {
+    width: 200px;
+    border: 1px solid red;
+  }
+
+  .box {
+    display: flex;
+    justify-content: space-between;
+  }
+</style>
+
+</html>
