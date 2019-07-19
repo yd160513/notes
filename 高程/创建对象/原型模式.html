@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>原型模式</title>
+</head>
+
+<body>
+  <script>
+    function Person() { }
+
+    // Person.prototype.name = 'name'
+    // Person.prototype.age = 23
+    // Person.prototype.job = 'software engineer'
+    // Person.prototype.sayName = function () {
+    //   alert(this.name)
+    // }
+    // 上边的这种写法可以简写
+    // 问题：
+    //    每创建一个函数，就会同事创建它的 prototype 对象，这个对象也会自动获取 constructor 属性，这种写法直接重写了 默认的 prototype 对象，因此 constructor 属性也变成了新对象的 constructor 属性(指向 Object 构造函数)
+    Person.prototype = {
+
+      // 解决上面问题的办法 ---- 手写
+      // 随之而来的问题就是原生的 constructor 是不可枚举的，这样重写就成了可枚举的，所以建议使用 Object.defineProperty();
+      // constructor: Person,
+
+      name: 'name',
+      age: 23,
+      job: 'software engineer',
+      sayName: function () {
+        alert(this.name)
+      }
+    }
+    // 使用 Object.defineProperty()
+    Object.defineProperty(Person.prototype, 'constructor', {
+      enumerable: false,
+      value: Person
+    })
+    var person1 = new Person();
+    person1.sayName(); // name
+
+    var person2 = new Person();
+    person2.sayName(); // name
+
+    /**
+      原型对象的问题：
+        1. 省略为构造函数传递初始化参数，导致所有实例在默认情况下取得相同的属性值
+        2. 原型中的属性是实例共享的，但是可以在实例中添加一个同名属性，这个属性值是基本类型的还好，如果是引用类型的就会产生在某一个实例中更改了原型中的数据，在其他实例中也会相应的被更改
+    */
+
+  </script>
+</body>
+
+</html>

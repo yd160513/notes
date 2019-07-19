@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>构造函数模式</title>
+</head>
+
+<body>
+  <script>
+    /**
+      1. 使用自定义构造函数实现
+      2. 与工厂模式不同的地方:
+        2.1 没有显式的创建对象
+        2.2 直接将属性和方法赋给了 this 对象
+        2.3 没有 return 对象
+      3. 可以将构造函数的实例标识为一种特定的类型
+    */
+    function Person(name, age, obj) {
+      this.name = name;
+      this.age = age;
+      this.job = job;
+
+      // 每个实例上都会创建一个名称为 sayName 的函数，但是他们是不相等的，这样是多余的操作
+      // this.sayName = function() {
+      //   alert(this.name)
+      // }
+      // 可以更改成引用同一个全局函数
+      // 这样可以解决上一个问题，但是定义的全局函数，只能被某个对象调用，有点不现实，且如果需要很多方法，都定义为全局函数，也没有封装性可言了。
+      // 这个新问题可以利用 原型模式 来解决
+      this.sayName = sayName;
+    }
+    function sayName() {
+      alert(this.name)
+    }
+    // 当构造函数来使用
+    var person1 = new Person('name1', 18, 'software engineer')
+    var person2 = new Person('name2', 11, 'doctor')
+    // 当普通函数来使用  属性和方法都被添加到 Global 对象
+    Person('name3', 22, 'Doctor') // 添加到 window
+    window.sayName(); // name3
+  </script>
+</body>
+
+</html>
