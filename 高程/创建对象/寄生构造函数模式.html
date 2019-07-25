@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>寄生构造函数模式</title>
+</head>
+
+<body>
+  <script>
+    /**
+      返回的对象与构造函数或者与构造函数的原型属性之间没有关系，
+      也就是说，构造函数返回的对象与在构造函数外部创建的对象没有什么不同，
+      为此，不能依赖 instanceof 操作符来确定对象类型
+    */
+    function Person(name, age) {
+      var o = new Object();
+      o.name = name;
+      o.age = age;
+      o.sayName = function(){
+        console.log(this.name)
+      }
+      return o;
+    }
+    var friend = new Person('N', 20, 'soft')
+    friend.sayName();
+    
+  </script>
+</body>
+
+</html>
