@@ -25,6 +25,7 @@
       return new F();
     }
     // 用这个函数替代组合继承中的 1. 将超类实例赋给子类原型 2. 将子类 constructor 还原 这两步
+    // 避免了在 SubType.prototype 上面创建不必要的多余的属性
     function inheritPrototype(subType, superType) {
       var prototype = object(superType.prototype) // 创建对象
       prototype.constructor = subType; // 增强对象
