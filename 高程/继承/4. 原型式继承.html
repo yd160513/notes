@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>原型式继承</title>
+</head>
+
+<body>
+  <script>
+    /*
+      借助原型可以基于已有的对象创建新对象，同时还不必因此创建自定义类型
+    */
+    function object(o) {
+      function F(){};
+      F.prototype = o; // 实例属性变为 原型属性
+      return new F();
+    }
+    var person = {
+      name: 'n',
+      friends: ['a', 'b']
+    }
+    // object() 方法可以更改为 Object.create()
+    var anotherPerson = object(person);
+    anotherPerson.name = 'L';
+    anotherPerson.friends.push('C')
+
+    var yetAnotherPerson = object(person);
+    yetAnotherPerson.name = 'LL'
+    yetAnotherPerson.friends.push('BBB')
+
+    console.log(person.friends) // ["a", "b", "C", "BBB"]
+  </script>
+</body>
+
+</html>

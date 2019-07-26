@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>借用构造函数</title>
+</head>
+
+<body>
+  <script>
+    function SuperType(name) {
+      this.name = name;
+      this.colors = ['res', 'blue', 'green']
+    }
+    function SubType() {
+      // 继承了 SuperType, 同时传递参数
+      SuperType.call(this, 'xiaoming'); // 每个实例都会有自己的执行环境，也就有了自己的 color
+      // 实例属性
+      // 为了确保 SuperType 构造函数不对重写子类型的属性，可以在调用超类型构造函数后再添加应该在子类型中定义的属性
+      this.age = 20;
+    }
+    var instance1 = new SubType();
+    instance1.colors.push('black');
+    console.log(instance1.colors); // ["res", "blue", "green", "black"]
+    console.log(instance1.name); // xiaoming
+    var instance2 = new SubType();
+    console.log(instance2.colors); // ["res", "blue", "green"]
+    console.log(instance1.name); // xiaoming
+
+    /*
+      问题：
+        1. 如果仅是借用构造函数，那也无法避免构造函数模式中的问题，方法都在构造函数中定义，所以函数复用就无从谈起了
+        2. 在超类型的原型中定义的方法，对子类型而言也是不可见的，结果所有类型都只能使用构造函数模式
+    */
+  </script>
+</body>
+
+</html>

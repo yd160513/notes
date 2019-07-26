@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>原型链继承</title>
+</head>
+
+<body>
+  <script>
+    function SuperType() {
+      this.property = true;
+    }
+    SuperType.prototype.getSuperValue = function() {
+      return this.property;
+    }
+    function SubType() {
+      this.subproperty = false;
+    }
+    // 继承 SuperType  
+    // 这种方式将 SubType 的原型指向了另一个对象(SuperType)的原型,而这个对象的 constructor 属性指向的是 SuperType
+    SubType.prototype = new SuperType();
+    SubType.prototype.getSubValue = function() {
+      return this.subproperty;
+    }
+    var instance = new SubType();
+    console.log(instance.getSuperValue()); // true
+
+    /*
+      问题：
+        1. 包含引用类型的原型属性会被所有实例共享（将一个对象的实例赋值给另一个对象的原型，那个对象的属性也就变成了另一个对象的原型属性）
+        2. 在创建子类型的实例时，不能向超类型的构造函数中传递参数
+    */
+  </script>
+</body>
+
+</html>

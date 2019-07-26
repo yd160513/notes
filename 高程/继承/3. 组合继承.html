@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>组合继承</title>
+</head>
+
+<body>
+  <script>
+    /*
+      思路：
+        使用 原型链 实现对 原型属性和方法 的继承，
+        通过 借用构造函数 来实现对 实例属性 的继承
+        第一次调用生成了原型属性和方法，第二次调用生成了原型属性，所以在查找属性的时候在实例中就可以找到，找方法只能在原型中找到
+    */
+    function SuperType(name) {
+      this.name = name;
+      this.colors = ['red', 'blue', 'green'];
+    }
+    SuperType.prototype.sayName = function() {
+      console.log(this.name)
+    }
+    function SubType(name, age) {
+      // 继承属性 -- 借用构造函数
+      SuperType.call(this, name) // 第二次调用 -- 将 SuperType 中的实例属性生成 SubType 的实例属性
+
+      this.age = age
+    }
+    // 继承方法
+    SubType.prototype = new SuperType(); // 第一次调用 -- 将 SuperType 中的实例属性变为 SubType 的原型属性
+    SubType.prototype.constructor = SubType;
+    SubType.prototype.sayAge = function() {
+      console.log(this.age);
+    }
+    // 每创建一次实例就会调用两次超类
+    var instance1 = new SubType('xiaobai', 29);
+    instance1.colors.push('black');
+    console.log(instance1.colors) // ["red", "blue", "green", "black"]
+    instance1.sayName(); // xiaobai
+    instance1.sayAge(); // 29
+
+    var instance2 = new SubType('zhonghua', 1)
+    console.log(instance2.colors) // ["red", "blue", "green"]
+    instance2.sayName(); // zhonghua
+    instance2.sayAge(); // 1
+
+  </script>
+</body>
+
+</html>
