@@ -27,9 +27,9 @@
     // 用这个函数替代组合继承中的 1. 将超类实例赋给子类原型 2. 将子类 constructor 还原 这两步
     // 避免了在 SubType.prototype 上面创建不必要的多余的属性
     function inheritPrototype(subType, superType) {
-      var prototype = object(superType.prototype) // 创建对象
-      prototype.constructor = subType; // 增强对象
-      subType.prototype = prototype; // 指定对象
+      var prototype = object(superType.prototype) // 创建超类型原型的一个副本，这里复制的只是父类原型上的
+      prototype.constructor = subType; // 为创建的副本添加 constructor 属性，从而弥补因重写原型而失去的默认的 constructor 属性
+      subType.prototype = prototype; // 将新创建的对象（副本）赋值给子类型的原型
     }
     function SuperType(name) {
       this.name = name;
@@ -39,7 +39,7 @@
       console.log(this.name)
     }
     function SubType(name, age) {
-      SuperType.call(this, name);
+      SuperType.call(this, name); // 创建子类上的实例属性
       this.age = age;
     }
     inheritPrototype(SubType, SuperType)
