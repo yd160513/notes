@@ -30,6 +30,9 @@ import LoopForm from '@/view/loopForm'
 import TablePageMemory from '@/view/tablePageMemory'
 import DialogtablePageMemory from '@/view/dialogtablePageMemory'
 import ShoppingCart from '@/view/shoppingCart'
+import FlowEditor from '@/view/flowEditor'
+import StringRenderStyle from '@/view/stringRenderStyle'
+import Dialog from '@/view/dialog'
 
 
 /**
@@ -142,6 +145,21 @@ export const constantRouterMap = [{
         path: '/shoppingCart',
         name: 'ShoppingCart',
         component: ShoppingCart
+      },
+      {
+        path: '/flowEditor',
+        name: 'FlowEditor',
+        component: FlowEditor
+      },
+      {
+        path: '/stringRenderStyle',
+        name: 'StringRenderStyle',
+        component: StringRenderStyle
+      },
+      {
+        path: '/dialog',
+        name: 'Dialog',
+        component: Dialog
       }
     ]
   }

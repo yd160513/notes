@@ -11,10 +11,12 @@
     "build": "node build/build.js"
   },
   "dependencies": {
+    "@riophae/vue-treeselect": "^0.3.0",
     "axios": "^0.18.0",
     "echarts": "^4.2.0-rc.2",
     "element": "^0.1.4",
     "element-ui": "^2.4.9",
+    "gojs": "^2.0.16",
     "js-cookie": "^2.2.0",
     "less": "^3.8.1",
     "mock": "^0.1.1",

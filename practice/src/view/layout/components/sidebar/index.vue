@@ -69,6 +69,9 @@ export default {
         '循环表单': '/loopForm',
         '表格分页记忆': '/tablePageMemory',
         '购物车demo': '/shoppingCart',
+        '流程编辑器': '/flowEditor',
+        '字符串模板渲染样式': '/stringRenderStyle',
+        '弹窗': '/dialog',
       };
       const id = '0';
       for (let [key, value] of Object.entries(obj)) {
